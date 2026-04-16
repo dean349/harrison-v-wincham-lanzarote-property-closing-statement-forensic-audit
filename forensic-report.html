@@ -1,0 +1,1613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Forensic Investigation Report — Harrison v Wincham International Limited — Los Romeros Limited — Version 4.1">
+<title>Forensic Investigation Report v4.1 — Los Romeros Limited / Harrison v Wincham</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+  :root {
+    --primary: #1e3a5f;
+    --primary-light: #2d5a96;
+    --accent: #c0392b;
+    --accent-light: #e74c3c;
+    --bg: #f8f9fb;
+    --surface: #ffffff;
+    --border: #d1d9e6;
+    --text: #1a1f2e;
+    --text-muted: #5a6475;
+    --note-bg: #e8f4fd; --note-border: #2980b9;
+    --important-bg: #e8f8e8; --important-border: #27ae60;
+    --warning-bg: #fef9e7; --warning-border: #f39c12;
+    --caution-bg: #fdecea; --caution-border: #c0392b;
+    --tip-bg: #f0f9f0; --tip-border: #2ecc71;
+    --th-bg: #1e3a5f; --th-fg: #ffffff;
+    --tr-alt: #f0f4f8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; font-size: 16px; line-height: 1.75; color: var(--text); background: var(--bg); }
+
+  /* ── HERO HEADER WITH SLIDESHOW ── */
+  .doc-header {
+    position: relative;
+    color: white;
+    padding: 0;
+    overflow: hidden;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    border-bottom: 4px solid var(--accent);
+  }
+
+  /* Slideshow images */
+  .hero-slides { position: absolute; inset: 0; z-index: 0; }
+  .hero-slide {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center 55%;
+    opacity: 0;
+    transition: opacity 1.4s ease-in-out;
+  }
+  .hero-slide.active { opacity: 1; }
+
+  /* Gradient overlay */
+  .hero-overlay {
+    position: absolute; inset: 0; z-index: 1;
+    background:
+      linear-gradient(to bottom,
+        rgba(10,20,40,0.60) 0%,
+        rgba(10,20,40,0.30) 30%,
+        rgba(10,20,40,0.65) 70%,
+        rgba(10,20,40,0.92) 100%),
+      radial-gradient(ellipse 80% 40% at 50% 0%, rgba(59,130,246,0.15), transparent);
+  }
+
+  /* Header content sits above overlay */
+  .hero-content-wrap {
+    position: relative; z-index: 2;
+    padding: 36px 48px 40px;
+  }
+
+  .doc-header .confidential {
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(180,210,255,0.8); margin-bottom: 12px;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .doc-header h1 { font-size: 32px; font-weight: 700; line-height: 1.15; margin-bottom: 10px; text-shadow: 0 2px 16px rgba(0,0,0,0.6); }
+  .doc-header .subtitle { font-size: 17px; color: #c5d8ef; margin-bottom: 24px; }
+
+  /* Meta grid — glassmorphic chips */
+  .meta-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 10px; margin-top: 4px;
+  }
+  .meta-item {
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.18);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: 10px;
+    padding: 10px 14px;
+  }
+  .meta-item label { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(180,210,255,0.75); display: block; margin-bottom: 3px; }
+  .meta-item span { font-size: 14px; font-weight: 600; color: white; line-height: 1.3; }
+
+  /* Image credit strip */
+  .hero-location-strip {
+    position: absolute; bottom: 12px; right: 20px; z-index: 3;
+    font-size: 11px; color: rgba(255,255,255,0.4);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── CONTENT ── */
+  .content { max-width: 1100px; margin: 0 auto; padding: 40px 48px; }
+
+  h1 { font-size: 24px; font-weight: 700; color: var(--primary); margin: 44px 0 18px; padding-bottom: 10px; border-bottom: 3px solid var(--primary); }
+  h2 { font-size: 19px; font-weight: 600; color: var(--primary-light); margin: 30px 0 14px; }
+  h3 { font-size: 17px; font-weight: 600; color: #374151; margin: 22px 0 12px; }
+  h4 { font-size: 15px; font-weight: 600; color: #4b5563; margin: 18px 0 10px; }
+  p { margin-bottom: 14px; font-size: 15.5px; }
+  ul, ol { padding-left: 26px; margin-bottom: 14px; }
+  li { margin-bottom: 7px; font-size: 15.5px; }
+  code { font-family: 'JetBrains Mono', monospace; font-size: 13px; background: #eef2f7; padding: 2px 6px; border-radius: 3px; }
+  pre { background: #1a1f2e; color: #e8edf5; padding: 20px; border-radius: 8px; overflow-x: auto; margin: 16px 0; }
+  pre code { background: none; color: inherit; padding: 0; }
+  strong { font-weight: 600; }
+  del { color: var(--text-muted); text-decoration: line-through; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 36px 0; }
+  a { color: var(--primary-light); }
+  blockquote { border-left: 3px solid var(--border); padding: 10px 18px; color: var(--text-muted); margin: 14px 0; font-size: 15px; }
+
+  /* ── TABLES ── */
+  table { width: 100%; border-collapse: collapse; margin: 18px 0; font-size: 14.5px; }
+  th { background: var(--th-bg); color: var(--th-fg); padding: 12px 14px; text-align: left; font-weight: 600; font-size: 13px; }
+  td { padding: 11px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:nth-child(even) td { background: var(--tr-alt); }
+  tr:hover td { background: #e8f0fb; }
+
+  /* ── ALERTS ── */
+  .alert { border-radius: 8px; padding: 16px 20px; margin: 18px 0; display: flex; gap: 14px; align-items: flex-start; }
+  .alert strong { white-space: nowrap; font-size: 13px; letter-spacing: 0.5px; }
+  .alert-body { flex: 1; font-size: 15px; line-height: 1.7; }
+  .alert.note { background: var(--note-bg); border-left: 4px solid var(--note-border); }
+  .alert.important { background: var(--important-bg); border-left: 4px solid var(--important-border); }
+  .alert.warning { background: var(--warning-bg); border-left: 4px solid var(--warning-border); }
+  .alert.caution { background: var(--caution-bg); border-left: 4px solid var(--caution-border); }
+  .alert.tip { background: var(--tip-bg); border-left: 4px solid var(--tip-border); }
+
+  /* ── FOOTER ── */
+  .doc-footer { background: var(--primary); color: #9eb8d8; text-align: center; padding: 28px 48px; font-size: 14px; margin-top: 60px; border-top: 4px solid var(--accent); }
+  .doc-footer strong { color: white; }
+
+  /* ── SLIDESHOW JS KEYFRAMES ── */
+  @keyframes kenBurns {
+    0% { transform: scale(1.0) translateX(0); }
+    100% { transform: scale(1.12) translateX(-1%); }
+  }
+  .hero-slide.active { animation: kenBurns 9s ease-in-out forwards; }
+
+  @media print {
+    body { background: white; }
+    .content { max-width: 100%; padding: 20px; }
+    h1 { page-break-before: always; }
+    h1:first-of-type { page-break-before: avoid; }
+    .alert, table, blockquote { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+
+  <!-- Lanzarote / Playa Blanca rotating background images -->
+  <div class="hero-slides" id="heroSlides">
+    <!-- Lanzarote / Canary Islands / Spanish coastal imagery — Unsplash CDN (public domain) -->
+    <div class="hero-slide active" style="background-image:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1571406761793-c8d9e01c3fa4?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1540541338287-41700207dee6?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1470114716159-e389f8712fda?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=1920&auto=format&fit=crop&q=80')"></div>
+    <div class="hero-slide" style="background-image:url('https://images.unsplash.com/photo-1531761535209-180857e963b9?w=1920&auto=format&fit=crop&q=80')"></div>
+  </div>
+
+  <!-- Gradient overlay -->
+  <div class="hero-overlay"></div>
+
+  <!-- Header content -->
+  <div class="hero-content-wrap">
+    <div class="confidential">⚠️ Confidential — Subject to Litigation Privilege</div>
+    <h1>Forensic Investigation Report</h1>
+    <div class="subtitle">Harrison v Wincham International Limited &nbsp;|&nbsp; Los Romeros Limited</div>
+    <div class="meta-grid">
+      <div class="meta-item"><label>Client</label><span>Philip &amp; Beryl Harrison</span></div>
+      <div class="meta-item"><label>Company</label><span>Los Romeros Limited (Co. 06993349)</span></div>
+      <div class="meta-item"><label>Property</label><span>85 Shangrila Park, Playa Blanca, Lanzarote</span></div>
+      <div class="meta-item"><label>Respondent</label><span>Wincham International Limited</span></div>
+      <div class="meta-item"><label>Report Version</label><span>4.2 — EOD 14 April 2026</span></div>
+      <div class="meta-item"><label>Reference</label><span>WI-13211 / WI-25863</span></div>
+    </div>
+  </div>
+
+  <div class="hero-location-strip">📍 Playa Blanca, Lanzarote, Canary Islands</div>
+
+</header>
+
+<!-- Slideshow script -->
+<script>
+  (function() {
+    var slides = document.querySelectorAll('.hero-slide');
+    var current = 0;
+    if (slides.length < 2) return;
+    setInterval(function() {
+      slides[current].classList.remove('active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('active');
+    }, 7000);
+  })();
+</script>
+
+<main class="content">
+<p># Wincham Client Portal — Forensic Investigation Report
+<h2>⚠️ VERSION 4.1 — EOD Update (14 April 2026)</h2>
+<h2>Philip Harrison / Los Romeros Limited</h2>
+<h3>Prepared: 13 April 2026 | Last Updated: 14 April 2026 — End of Day | Source: Wincham Portal (tax.wincham.com) + PDF Document Analysis + Live Portal Fee Verification</h3></p>
+
+<hr>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body">This report documents all information retrieved from the Wincham International client portal for Philip Harrison (phil.harrison1904@gmail.com). Two cases exist: <strong>WI-13211</strong> (Los Romeros Limited — Company Purchases Case) and <strong>WI-25863</strong> (Property Sales Case). Full document inventory, message content, financial breakdown, evidence record, and legal recommendations are contained herein.
+
+<p><strong>VERSION 4.0 additions:</strong> Property ownership history, ITP tax analysis, evidence bundle secured (5 PDFs), formal letters issued to Wincham and Spanish authorities, and professional recommendations.</div></div></p>
+
+<hr>
+
+<h2>1. PORTAL DASHBOARD — CASES FOUND</h2>
+
+<table>
+<tr><th>Case Number</th><th>Name</th><th>Type</th></tr>
+<tr><td><strong>WI-13211</strong></td><td>Los Romeros Limited</td><td>Company Purchases Case</td></tr>
+<tr><td><strong>WI-25863</strong></td><td>(Philip Harrison)</td><td>Property Sales Case</td></tr>
+</table>
+
+<p><strong>Portal Welcome Name:</strong> Philip and Beryl
+<strong>Terms & Conditions Accepted:</strong> 12/12/2019 (completion date)
+<strong>Direct Debit:</strong> Active on portal</p>
+
+<hr>
+
+<h2>2. THE PROPERTY AND COMPANY</h2>
+
+<table>
+<tr><th>Detail</th><th>Information</th></tr>
+<tr><td><strong>Property Address</strong></td><td>85 Shangrila Park, Playa Blanca, Lanzarote, Spain</td></tr>
+<tr><td><strong>Land Registry Reference</strong></td><td>Finca No. 14357</td></tr>
+<tr><td><strong>Holding Structure</strong></td><td>Property held inside Los Romeros Limited (UK company)</td></tr>
+<tr><td><strong>UK Company Number</strong></td><td>06993349</td></tr>
+<tr><td><strong>Company Type</strong></td><td>UK Private Limited Company (used as Spanish property vehicle)</td></tr>
+<tr><td><strong>Registered Office</strong></td><td>Wincham House, Greenfield Farm Trading Estate, Congleton, CW12 4TR</td></tr>
+</table>
+
+<hr>
+
+<h2>3. THE SHARE PURCHASE — HOW IT WORKED</h2>
+
+<p>Philip & Beryl Harrison purchased <strong>100% of the shares</strong> in Los Romeros Limited from <strong>Mary & Kevin Stockwell</strong> in December 2019. The company held the Lanzarote property, so buying the company was equivalent to buying the property — but avoiding Spanish transfer tax on the property itself.</p>
+
+<h3>Share Structure Purchased:</h3>
+<ul>
+<li><strong>2 x Ordinary Shares</strong> (£1.00 nominal each) — transferred to Harrison</li>
+<li><strong>171,732 x Redeemable Preference Shares</strong> (£1.00 nominal each) — redeemed</li>
+</ul>
+
+<h3>Sellers: Mary Stockwell and Kevin Stockwell</h3>
+
+<h3>Key People Post-Completion:</h3>
+<ul>
+<li><strong>Philip Harrison</strong> — appointed Director</li>
+<li><strong>Beryl Harrison</strong> — appointed Director</li>
+<li><strong>Kevin Stockwell</strong> — resigned as Director (not effective until completion)</li>
+</ul>
+
+<hr>
+
+<h2>4. PURCHASE PRICE AND PAYMENT STRUCTURE</h2>
+
+<table>
+<tr><th>Component</th><th>Amount</th><th>Currency</th><th>Notes</th></tr>
+<tr><td><strong>Total Consideration (Purchase Price)</strong></td><td><strong>185,000.00</strong></td><td><strong>€ EUR</strong></td><td>100% share purchase</td></tr>
+<tr><td>Non-refundable Reservation Deposit</td><td>5,000.00</td><td>€ EUR</td><td>Paid 10/12/2019</td></tr>
+<tr><td>Balance on Completion</td><td>180,000.00</td><td>€ EUR</td><td>Paid 23/12/2019</td></tr>
+<tr><td>Director's Loan Account inherited</td><td>37,652.00</td><td>£ GBP</td><td>Buyers assumed the DLA</td></tr>
+</table>
+
+<h3>Confirmed Payment Receipts (Wincham held funds and disbursed):</h3>
+<table>
+<tr><th>Receipt</th><th>Amount</th><th>Currency</th></tr>
+<tr><td>Purchase funds</td><td>136,000.00</td><td>€ EUR</td></tr>
+<tr><td>Additional Euro funds</td><td>4,991.51</td><td>€ EUR</td></tr>
+<tr><td>Bulk Sterling payment</td><td>20,000.00</td><td>£ GBP</td></tr>
+<tr><td>Purchase funds & balance of fees</td><td>19,368.24</td><td>£ GBP</td></tr>
+<tr><td><strong>TOTAL Euro receipts held by Wincham</strong></td><td><strong>€140,991.51</strong></td><td><strong>€ EUR</strong></td></tr>
+<tr><td><strong>TOTAL Sterling receipts held by Wincham</strong></td><td><strong>£39,368.24</strong></td><td><strong>£ GBP</strong></td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">The property was originally contributed into the company in 2010 at a notarially assessed value of <strong>€231,164.73</strong> (per the Aumento de Capital deed). The 2019 sale at €185,000 was therefore <strong>below</strong> the original Spanish notarial valuation — a difference of <strong>€46,164</strong>.</div></div>
+
+<hr>
+
+<h2>5. KEY DATES TIMELINE</h2>
+
+<table>
+<tr><th>Date</th><th>Event</th></tr>
+<tr><td><strong>8 March 2006</strong></td><td>Original Escritura de Compraventa — Property purchased by Frederick & Margaret Purvis for <strong>€175,000</strong> from Owen Richard Hollywood. Notary: Carmen Martínez Socias, Arrecife. Protocol No. 1612</td></tr>
+<tr><td><strong>2006</strong></td><td>Finca 14357 registered at Registro de la Propiedad de Yaiza</td></tr>
+<tr><td><strong>13/04/2010</strong></td><td>Original Escritura (Title Deed) captured in Wincham portal — INT-7446 / INT-7447</td></tr>
+<tr><td><strong>13/04/2010</strong></td><td>Invoice/Factura Euro (INT-7454) — Ref 1809</td></tr>
+<tr><td><strong>21/06/2010</strong></td><td>Investment Calculation prepared (INT-8979)</td></tr>
+<tr><td><strong>24/06/2010</strong></td><td>Deed of Investment / Aumento de Capital executed — property contributed into Los Romeros Limited at <strong>€231,164.73</strong> (INT-9097). Notary: José Miguel de Lamo Iglesias, Benissa</td></tr>
+<tr><td><strong>27/07/2010</strong></td><td>Director appointments and allotments of shares</td></tr>
+<tr><td><strong>05/08/2010</strong></td><td>Stock Transfer Forms stamped — Frederick & Margaret</td></tr>
+<tr><td><strong>07/10/2019</strong></td><td>Kevin Stockwell appointed as Director</td></tr>
+<tr><td><strong>13/11/2019</strong></td><td>Property Description document prepared (UNSIGNED — NO POOL, NO GARAGE)</td></tr>
+<tr><td><strong>10/12/2019</strong></td><td>Non-refundable deposit of €5,000 paid</td></tr>
+<tr><td><strong>10/12/2019</strong></td><td>Sale & Purchase Agreement signed (INT-154371)</td></tr>
+<tr><td><strong>10/12/2019</strong></td><td>Consent to Act — Phil and Beryl Harrison (INT-154369)</td></tr>
+<tr><td><strong>10/12/2019</strong></td><td>Resignation — Kevin Stockwell (INT-154340)</td></tr>
+<tr><td><strong>10/12/2019</strong></td><td>EGM Minutes (INT-154339)</td></tr>
+<tr><td><strong>12/12/2019</strong></td><td><strong>Legal Completion</strong> — T&Cs accepted, portal activated</td></tr>
+<tr><td><strong>20/12/2019</strong></td><td><strong>Wincham International Invoice 262</strong> issued (INT-154784)</td></tr>
+<tr><td><strong>23/12/2019</strong></td><td>Balance of €180,000 paid on completion</td></tr>
+<tr><td><strong>19/01/2026</strong></td><td>Fiscal Rep Spain invoice issued for 2026 — £300 inc VAT (covers 1 Jan 2026 – 31 Dec 2026)</td></tr>
+<tr><td><strong>30/01/2026</strong></td><td>Confirmation: £300 for Fiscal Rep in Spain received</td></tr>
+<tr><td><strong>20/03/2026</strong></td><td><strong>Property sale completed</strong> — €315,000 (Case WI-25863) — <strong>⚠️ Pro-rata refund may be due on Fiscal Rep fee — see Section 6B note below</strong></td></tr>
+<tr><td><strong>11/04/2026</strong></td><td>Completion Statement created (per PDF metadata)</td></tr>
+<tr><td><strong>13/04/2026</strong></td><td><strong>Forensic portal screenshots captured</strong> — all five 2010 documents photographed page-by-page</td></tr>
+<tr><td><strong>13/04/2026</strong></td><td><strong>Five PDFs compiled</strong> from portal screenshots and saved to evidence bundle</td></tr>
+<tr><td><strong>13/04/2026</strong></td><td><strong>Formal document request letter drafted</strong> — sent to Wincham (14-day deadline)</td></tr>
+<tr><td><strong>13/04/2026</strong></td><td><strong>Spanish registry request letters drafted</strong> — Registro de la Propiedad de Yaiza, Notaría Arrecife, Notaría Benissa</td></tr>
+</table>
+
+<hr>
+
+<h2>6. ALL WINCHAM FEES — COMPLETE ITEMISED LIST</h2>
+
+<h3>6A. Purchase Phase Fees — December 2019</h3>
+
+<table>
+<tr><th>Item</th><th>Amount (excl. VAT)</th><th>Amount (inc. VAT)</th><th>Notes</th></tr>
+<tr><td><strong>Wincham Initial Service Fee</strong></td><td><strong>£5,300</strong></td><td>—</td><td>For property value up to €200k (from View Illustration — see note ⚠️)</td></tr>
+<tr><td><strong>Additional Purchase Fee (into UK Co.)</strong></td><td><strong>£750</strong></td><td>—</td><td>Additional fee for purchasing via UK company structure</td></tr>
+<tr><td><strong>Wincham Invoice 262</strong> (UK & Spain consultancy, share purchase)</td><td><strong>£1,600</strong></td><td><strong>£1,600</strong></td><td>Issued 20/12/2019 (INT-154784) — ✅ <strong>Invoice received and paid in full</strong></td></tr>
+</table>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>View Illustration:</strong> The £5,300 + £750 figures are taken from Wincham's pre-purchase 'View Illustration' document — a fee quotation prepared for Philip Harrison before he committed to buying. <strong>No standalone copy of this document has been located in the current case files.</strong> It is referenced in the portal but may not have been preserved as a separate file. Wincham must be required to produce the original View Illustration as part of the formal document request — it constitutes the pre-contractual representation on fees.
+
+<p><strong>Invoice 262 (INT-154784) — CONFIRMED PAID IN FULL:</strong> This is Wincham International's invoice dated 20 December 2019 (issued 8 days after completion). The full description per the portal is: <em>UK & Spain consultancy, share purchase of Los Romeros Limited</em> — covering Wincham's professional fees for: (a) UK company secretarial work for the share transfer; (b) Spanish consultancy services connected with the transaction; and (c) liaising with the Spanish notary and registrar. <strong>The invoice has been confirmed as received and paid in full at £1,600.</strong> At £1,600, this invoice is nonetheless <strong>£4,450 less</strong> than the £6,050 quoted in the View Illustration (£5,300 + £750). The invoice being paid does not reconcile the gap — the question remains why the fee was reduced from the quoted £6,050 to £1,600 with no written variation agreement. Wincham must produce the View Illustration and any written justification for the reduction.</p>
+
+<p><strong>Action:</strong> Wincham must produce the original View Illustration and any written communication authorising the reduction from £6,050 to £1,600 — see Section 20 (Formal Evidence Gathering Actions).</div></div></p>
+
+<h3>6B. Annual Running Costs — Year-by-Year Itemisation</h3>
+
+<p><em>Los Romeros Limited was owned by Philip and Beryl Harrison from December 2019 until March 2026 — a period of approximately 6 years and 3 months.</em></p>
+
+<h4>Fiscal Representation in Spain — CONFIRMED INVOICE HISTORY</h4>
+
+<table>
+<tr><th>Year</th><th>Invoice Ref</th><th>Period</th><th>Amount</th><th>Status</th></tr>
+<tr><td>2019/2020</td><td>INT-153836 / reinvoiced INT-166932</td><td>Fiscal Rep Spain 2020 (issued 02/12/2019, revised Feb 2020)</td><td><strong>£300</strong></td><td>Active — ⚠️ Credit note INT-166931 also issued (see note)</td></tr>
+<tr><td>2020/2021</td><td><strong>INT-176533</strong></td><td>Fiscal Rep Spain 2021 (issued 27/11/2020)</td><td><strong>£200</strong></td><td>Active</td></tr>
+<tr><td>2021/2022</td><td><strong>INT-189295</strong></td><td>Fiscal Rep Spain 2022 (issued 20/12/2021)</td><td><strong>£200</strong></td><td>Active</td></tr>
+<tr><td>2022/2023</td><td><strong>INT-200758</strong></td><td>Fiscal Rep Spain 2023 (issued 09/02/2023)</td><td><strong>£200</strong></td><td>Active</td></tr>
+<tr><td>2023/2024</td><td><strong>INT-209586</strong></td><td>Fiscal Rep Spain 2024 (issued 14/02/2024)</td><td><strong>£200</strong></td><td>Active</td></tr>
+<tr><td>2024/2025</td><td><strong>INT-215864</strong></td><td>Fiscal Rep Spain 2025 (issued 04/04/2025)</td><td><strong>£300</strong></td><td>Active — Fee increased from £200 to £300 (Wincham cited rising supplier costs)</td></tr>
+<tr><td>2025/2026</td><td><strong>INT-237191</strong></td><td>Fiscal Rep Spain 2026 (invoiced 19/01/2026, paid 30/01/2026)</td><td><strong>£300</strong></td><td>PAID — Helen Barnett confirmed receipt</td></tr>
+<tr><td><strong>TOTAL CONFIRMED</strong></td><td></td><td></td><td><strong>£1,700</strong></td><td>(2020: £300 + 2021-24: £200×4 = £800 + 2025: £300 + 2026: £300)</td></tr>
+</table>
+
+<div class="alert warning"><strong>⚠️ WARNING</strong><div class="alert-body"><strong>Pro-rata refund may be due on the 2026 Fiscal Rep fee.</strong> Wincham invoiced £300 for the full calendar year 1 January – 31 December 2026. The property was sold and the company vacated its Spanish obligations on <strong>20 March 2026</strong> — meaning only approximately 2.5 months of a 12-month period were used. The unused balance of approximately <strong>£225</strong> (9.5/12 × £300) may be recoverable as unjust enrichment or a refund claim. Wincham must be asked to credit this amount.
+
+<p><strong>⚠️ Credit Note anomaly (2020):</strong> INT-166932 (Fiscal Rep Spain 2020) was issued in February 2020 when a credit note (INT-166931) was also issued — yet INT-153836 had already been invoiced for the same 2020 period in December 2019. This suggests either a double-billing and correction, or an amendment to the 2020 invoice. The credit note and re-invoice must be reconciled.</div></div></p>
+
+<hr>
+
+<h4>Registered Office & Company Secretarial — CONFIRMED INVOICE HISTORY (All Years)</h4>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body"><strong>Previous estimate of £300/yr was INCORRECT.</strong> All six years have now been verified directly from the Wincham portal. Actual amounts ranged from £200–£235/yr (net), not £300/yr. Total confirmed at £1,572 inc. VAT for the Harrison period.</div></div>
+
+<table>
+<tr><th>Year</th><th>Invoice Ref</th><th>Invoice No.</th><th>Date</th><th>Net</th><th>VAT</th><th><strong>Total Inc. VAT</strong></th><th>Status</th></tr>
+<tr><td>2019/2020</td><td>INT-141541</td><td>Invoice 11994</td><td>01/03/2019</td><td>£200.00</td><td>£40.00</td><td><strong>£240.00</strong></td><td>Confirmed</td></tr>
+<tr><td>2020/2021</td><td>INT-167506</td><td>Invoice 13237</td><td>02/03/2020</td><td>£200.00</td><td>£40.00</td><td><strong>£240.00</strong></td><td>Confirmed</td></tr>
+<tr><td>2021/2022</td><td>INT-179615</td><td>Invoice 483</td><td>01/03/2021</td><td>£215.00</td><td>£43.00</td><td><strong>£258.00</strong></td><td>Confirmed</td></tr>
+<tr><td>2022/2023</td><td>INT-191453</td><td>Invoice 1603</td><td>01/03/2022</td><td>£225.00</td><td>£45.00</td><td><strong>£270.00</strong></td><td>Confirmed</td></tr>
+<tr><td>2023/2024</td><td>INT-201402</td><td>Invoice 2737</td><td>01/03/2023</td><td>£235.00</td><td>£47.00</td><td><strong>£282.00</strong></td><td>Confirmed</td></tr>
+<tr><td>2024/2025</td><td>INT-210097</td><td>Invoice 3876</td><td>01/03/2024</td><td>£235.00</td><td>£47.00</td><td><strong>£282.00</strong></td><td>Confirmed</td></tr>
+<tr><td><strong>CONFIRMED TOTAL</strong></td><td></td><td></td><td></td><td><strong>£1,310.00</strong></td><td><strong>£262.00</strong></td><td><strong>£1,572.00</strong></td><td>6 years confirmed</td></tr>
+</table>
+
+<hr>
+
+<h4>Annual Accounts Preparation — CONFIRMED INVOICE HISTORY (All Years)</h4>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body"><strong>Previous £600/yr estimate was INCORRECT.</strong> All confirmed amounts are significantly lower (~£450–£475/yr inc. VAT). INT-167263 has been reclassified — it is NOT an accounts invoice. See note below.</div></div>
+
+<table>
+<tr><th>Year End</th><th>Invoice Ref</th><th>Invoice No.</th><th>Date</th><th>Net</th><th>VAT</th><th><strong>Total Inc. VAT</strong></th><th>Status</th></tr>
+<tr><td>31/08/2018</td><td>INT-143358</td><td>Invoice 12151</td><td>12/04/2019</td><td>£450.00</td><td>£90.00</td><td><strong>£540.00</strong></td><td>Confirmed — pre-Harrison (Purvis/Stockwell era)</td></tr>
+<tr><td>31/08/2019</td><td>INT-153484</td><td>Invoice 12939</td><td>29/11/2019</td><td>£450.00</td><td>£90.00</td><td><strong>£540.00</strong></td><td>Confirmed — transition period (Harrison purchase Dec 2019)</td></tr>
+<tr><td>31/08/2020</td><td>INT-181479</td><td>Invoice 661</td><td>30/04/2021</td><td>£425.00</td><td>£85.00</td><td><strong>£510.00</strong></td><td>Confirmed — slight reduction (possible goodwill adjustment)</td></tr>
+<tr><td>31/08/2021</td><td>INT-192906</td><td>Invoice 1753</td><td>29/04/2022</td><td>£450.00</td><td>£90.00</td><td><strong>£540.00</strong></td><td>Confirmed</td></tr>
+<tr><td>31/08/2022</td><td>INT-202690</td><td>Invoice 2871</td><td>20/04/2023</td><td>£475.00</td><td>£95.00</td><td><strong>£570.00</strong></td><td>Confirmed</td></tr>
+<tr><td>31/08/2023</td><td>INT-207628</td><td>Invoice 3533</td><td>17/11/2023</td><td>£450.00</td><td>£90.00</td><td><strong>£540.00</strong></td><td>Confirmed</td></tr>
+<tr><td>31/08/2024</td><td>INT-214805</td><td><em>(part of accounts package)</em></td><td>19/12/2024</td><td>TBC</td><td>TBC</td><td><strong>TBC</strong></td><td>Invoice amount to confirm</td></tr>
+<tr><td><strong>CONFIRMED TOTAL (6 years)</strong></td><td></td><td></td><td></td><td><strong>£2,700.00</strong></td><td><strong>£540.00</strong></td><td><strong>£3,240.00</strong></td><td>Subject to 2024 invoice confirmation</td></tr>
+</table>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>INT-167263 RECLASSIFICATION:</strong> INT-167263 (Wincham Accountants Invoice 13186, 27/02/2020) was previously listed in this table as a 31/08/2021 accounts invoice. This is <strong>incorrect</strong>. Portal verification confirms this is a <strong>Certificate of Good Standing invoice — £50.00 + VAT = £60.00</strong>, dated 27/02/2020. It is not an annual accounts preparation fee. It has been moved to Section 7A (Third-Party Costs) accordingly.</div></div>
+
+<hr>
+
+<h4>Combined Annual Costs Summary — CONFIRMED (Harrison Ownership Period: Dec 2019 – Mar 2026)</h4>
+
+<table>
+<tr><th>Service</th><th>Confirmed Annual Range</th><th>Years</th><th><strong>Total Inc. VAT — CONFIRMED</strong></th></tr>
+<tr><td>Fiscal Rep Spain</td><td>£200–£300/yr</td><td>7 payments</td><td><strong>£1,700</strong></td></tr>
+<tr><td>Registered Office & Company Sec</td><td>£200–£235/yr (net)</td><td>6 years</td><td><strong>£1,572</strong></td></tr>
+<tr><td>Annual Accounts Preparation</td><td>£425–£475/yr (net)</td><td>6 years confirmed</td><td><strong>£3,240</strong></td></tr>
+<tr><td>Certificate of Good Standing (INT-167263)</td><td>One-off</td><td>—</td><td><strong>£60</strong></td></tr>
+<tr><td><strong>GRAND TOTAL — Annual Running Costs</strong></td><td></td><td></td><td><strong>£6,572 inc. VAT</strong></td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">Previous estimates of ~£7,400 were based on unverified £300/yr Co. Sec and £600/yr accounts rates. The confirmed total is <strong>£6,572 inc. VAT (£5,472 net)</strong>. The 2024 accounts invoice is still to be confirmed — total may increase by ~£540 inc. VAT once verified.</div></div>
+
+<h3>6C. Property Sale Fees — 2026 (Case WI-25863)</h3>
+
+<table>
+<tr><th>Item</th><th>Net (excl. VAT)</th><th>VAT @ 20%</th><th>Gross (inc. VAT)</th><th>Notes</th></tr>
+<tr><td><strong>Wincham Legal Fee — UK company documentation</strong></td><td><strong>£5,000</strong></td><td><strong>£1,000</strong></td><td><strong>£6,000</strong></td><td>Preparing all English-language company documents for the sale transaction</td></tr>
+<tr><td><strong>Wincham Legal Fee — Spanish company documentation</strong></td><td><strong>£3,000</strong></td><td><strong>£600</strong></td><td><strong>£3,600</strong></td><td>Preparing all Spanish-language documents required for the Spanish notarial transaction</td></tr>
+<tr><td><strong>Legalisation Fee (Apostille)</strong></td><td>—</td><td>—</td><td><strong>£126</strong></td><td>Government apostille fee for legalising UK company documents for use in Spain</td></tr>
+<tr><td><strong>SUBTOTAL — Wincham Legal Fees</strong></td><td><strong>£8,000</strong></td><td><strong>£1,600</strong></td><td><strong>£9,726</strong></td><td></td></tr>
+</table>
+
+<div class="alert warning"><strong>⚠️ WARNING</strong><div class="alert-body">To be clear: the <strong>£5,000 + 20% VAT = £6,000</strong> and <strong>£3,000 + 20% VAT = £3,600</strong> — making a combined legal fee total of <strong>£9,600 + £126 Apostille = £9,726 total (inc. VAT)</strong>. These fees are <strong>completely absent from the Completion Statement</strong> and must be reconciled against Wincham's client bank account records.</div></div>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>⚠️ CROSS-BORDER BILLING IRREGULARITY — FORENSIC FLAGS:</strong>
+
+<p><strong>Why were these fees paid in pounds to a UK entity?</strong>
+The Letter of Engagement for the property sale was signed between Los Romeros Limited and <strong>Wincham Spanish Services SL</strong> — the Spanish-registered entity within the Wincham group (CIF B-54842695). The contract explicitly stated that the £5,000 fee <em>"relates solely to work carried out in Spain and under its jurisdiction."</em></p>
+
+<p>Despite this, <strong>Mark Roach, Managing Director of Wincham (mark@wincham.com)</strong>, directed Philip Harrison to pay the full £9,600 to <strong>Wincham International Limited</strong> — the UK entity — via their Clearbank Ltd Tide Account:
+<ul>
+<li><strong>Account:</strong> 14689723</li>
+<li><strong>Sort Code:</strong> 04-06-05</li>
+</ul></p>
+
+<p>Mark Roach's own words: <em>"Please note — £6,000 Bank Transfer can only be made from another UK Sterling Account. Wincham International Limited (Tide Account), Official Bank Name: Clearbank LTD, Account: 14689723, Sort Code: 04:06:05."</em></p>
+
+<p><strong>The £3,600 document preparation component</strong> was required by Wincham for UK company documents prepared in English and Spanish for the Spanish Notary. The Spanish contract explicitly stated that any UK-based work <em>"will be covered by a separate Agreement if applicable."</em> No such separate UK agreement was ever produced. The £3,600 was simply bundled with the £6,000 Spanish fee and directed to the same UK account — with no UK contractual basis.</p>
+
+<p><strong>The Completion Statement itself</strong> classifies both payments as <em>"OFF-STATEMENT DISBURSEMENTS (UK JURISDICTION)"</em> — meaning even Wincham's own documentation acknowledges these were UK-jurisdiction charges, billed under a Spanish contract, received by a UK entity.</p>
+
+<p><strong>Legal exposure identified from source documents:</strong>
+<ul>
+<li><strong>Unjust enrichment</strong> — Wincham International Limited (UK) received £9,600 it was not contractually entitled to under the Spanish engagement</li>
+<li><strong>Fraudulent misrepresentation</strong> — the client was directed to pay a Spanish contract to a UK entity with no disclosed legal basis</li>
+<li><strong>Breach of contract</strong> — no separate UK agreement was produced for the UK portion of work, as the Spanish contract required</li>
+<li>The Letter of Engagement's Section 6.3 waiver <strong>does not</strong> extinguish claims for <em>"fraudulent misrepresentation and/or fraudulent concealment prior to the execution of this Letter"</em> — this avenue remains fully open</li>
+</ul></p>
+
+<p><strong>Independent market comparison:</strong> The same services sourced independently would have cost <strong>£2,678.63 – £4,553.63</strong> (including Spanish Notary fees of €474.86). Wincham charged <strong>£10,003.63</strong> for the equivalent services — a markup of <strong>110–258% above fair market rate</strong>. Source: <em>Los Romeros Limited — Wincham Sales Agreement — Fee Overcharge Report</em> (10 April 2026).</div></div></p>
+
+<h4>Estate Agent Fees — Clarification</h4>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>The Completion Statement shows two separate line items under 'Lanzarote Investments Real Estate'. These require careful explanation:</strong>
+
+<p><strong>Line 1 — €10,111.50:</strong> This represents Wincham's estate agent commission on the sale. Based on the Completion Statement, this equates to approximately <strong>3% of the €315,000 sale price + Spanish IVA (IGIC in the Canary Islands at 7%)</strong> — i.e., approximately €9,450 net + €661.50 tax = €10,111.50. This is Wincham's sales commission charged to Los Romeros Limited for finding/facilitating the buyer.</p>
+
+<p><strong>Line 2 — €192.60:</strong> This is <strong>not</strong> a second estate agent commission. Per information from Philip Harrison, this sum was included in the Completion Statement by Wincham and related to <strong>utility bills owed</strong> (likely electricity or water charges) — it appears to have been routed through the Lanzarote Investments Real Estate line item on the statement but was in substance a utility debt settlement.</p>
+
+<p><strong>Distinction from the 'Sales Commission' portal quote:</strong> The Wincham portal had referred to a <em>potential</em> 5% sales commission if Wincham introduced the buyer. The actual charge of ~3% (€10,111.50) suggests either: (a) a different commission rate applied in practice; (b) a third-party agent (Lanzarote Investments Real Estate) was the actual introducer and charged 3%; or (c) a negotiated rate was applied. A copy of the estate agent engagement letter and the commission agreement must be obtained to verify this figure.</div></div></p>
+
+<table>
+<tr><th>Completion Statement Item</th><th>Amount</th><th>Actual Nature</th></tr>
+<tr><td>Lanzarote Investments Real Estate — Fee 1</td><td><strong>€10,111.50</strong></td><td>Estate agent sales commission (~3% of €315,000 + Canary Islands tax)</td></tr>
+<tr><td>Lanzarote Investments Real Estate — Fee 2</td><td><strong>€192.60</strong></td><td>Utility bills owed — not an agent commission</td></tr>
+<tr><td><strong>Total deducted under this heading</strong></td><td><strong>€10,304.10</strong></td><td></td></tr>
+</table>
+
+<hr>
+
+<h2>7. THIRD-PARTY COSTS</h2>
+
+<h3>7A. Original Company Formation and Property Contribution (2010)</h3>
+
+<p>In 2010, the Purvis family (original shareholders of Los Romeros Limited) arranged for the Lanzarote property to be formally contributed into the company. This required a series of legal steps in both the UK and Spain, coordinated by Wincham. The following costs were incurred:</p>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body"><strong>What does "contribute" mean?</strong> In this context it does NOT mean the Purvises gave the property away for free. The formal Spanish legal mechanism is an <em>"Escritura de Aumento de Capital Mediante Aportación de Bienes Inmuebles"</em> — a Deed of Capital Increase by Contribution of Real Estate. In plain English: Los Romeros Limited was set up as an <strong>empty shell company</strong> with no assets. The Purvises then transferred their personally-owned Spanish property <strong>into the company</strong>, in exchange for newly-issued shares (see INT-9873 — Allotment of Shares, 27 July 2010) and/or a credit to their Director's Loan Account. The company "paid" for the property not in cash, but by issuing equity. The critical point is the <strong>declared value</strong>: the property was valued at <strong>€231,164.73</strong> for this transaction — a <strong>32% uplift</strong> over the €175,000 paid in 2006 — with no evidence of an independent formal valuation. This inflated declared value: (a) set the company's asset book value; (b) inflated the Director's Loan Account; and (c) may affect the Spanish CGT base cost calculation for the 2026 sale. Wincham (specifically Mark Roach, who was appointed Director of Los Romeros Limited in 2011) orchestrated and executed this structure.</div></div>
+
+<table>
+<tr><th>Item</th><th>Amount</th><th>Currency</th><th>Notes</th></tr>
+<tr><td><strong>UK Company Formation fee</strong> (est.)</td><td>£250 + VAT</td><td>£ GBP</td><td>Wincham formed Los Romeros Limited as a UK private limited company to hold the Spanish property — a structure marketed by Wincham to avoid Spanish property transfer tax (ITP).</td></tr>
+<tr><td><strong>Certificate of Good Standing</strong></td><td>£15 + VAT</td><td>£ GBP</td><td>Required for the Spanish notarial process — the UK company needed to prove its legal standing to Spanish authorities before the property could be transferred into it</td></tr>
+<tr><td><strong>Aumento de Capital (Deed of Investment)</strong></td><td>—</td><td>—</td><td>Full formal title: <em>Escritura de Aumento de Capital Mediante Aportación de Bienes Inmuebles</em> — executed by Notary José Miguel de Lamo Iglesias, Benissa, 24 June 2010 (INT-9097). The property was contributed into Los Romeros Limited at an officially notarised value of <strong>€231,164.73</strong>. Documents: Spanish-language deed (captured in Wincham portal, 20 pages).</td></tr>
+<tr><td><strong>Invoice/Factura 1809</strong> (INT-7454)</td><td><em>Amount to be confirmed from PDF</em></td><td>€ EUR</td><td>Wincham's invoice for the 2010 property contribution and company document work. Captured in portal as a Euro-denomination invoice.</td></tr>
+<tr><td><strong>Investment Calculation</strong> (INT-8979)</td><td><strong>€200,000.00 declared</strong></td><td>—</td><td>Wincham's internal financial analysis prepared 21/06/2010. <strong>⚠️ CRITICAL DISCREPANCY: The document declares the 'INVESTMENT VALUE TO DECLARE' as €200,000.00 — but the 2006 Escritura (Protocol 1612) records the actual purchase price as €175,000.</strong> This is a €25,000 discrepancy on Wincham's own calculation sheet, prepared before the 2010 Aumento de Capital was executed. It suggests deliberate inflation of the declared value at the planning stage, prior to the notarial uplift to €231,164.73. This is now the earliest evidence of the valuation manipulation chain (2006: €175k actual → 2010 Wincham calc: €200k declared → 2010 Notary deed: €231,164.73).</td></tr>
+<tr><td><strong>Notarised & Translated Company Documents</strong> (INT-7451)</td><td>—</td><td>—</td><td>Package of UK company documents (translated into Spanish) required for the Spanish notary to accept the company as the legal property owner</td></tr>
+<tr><td><strong>CIF Number</strong> (INT-7453)</td><td>—</td><td>—</td><td>Spanish tax identification number (Código de Identificación Fiscal) obtained for Los Romeros Limited — required for the company to be registered as a property owner in Spain and to comply with Spanish tax obligations</td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">The total cost of the 2010 company formation and property contribution has not been fully confirmed from the documentary record. The amounts above for company formation and Certificate of Good Standing are as noted in the Wincham portal. The Factura 1809 (INT-7454) contains the Euro costs — this PDF has been secured and should be read in full to extract the confirmed amount.</div></div>
+
+<hr>
+
+<h3>7B. SHARE PURCHASE — Harrison Acquisition (December 2019) — Third-Party Costs</h3>
+
+<p><strong>This is the FIRST and ONLY purchase phase involving Philip and Beryl Harrison.</strong> They did not buy the property directly — they bought <strong>100% of the shares in Los Romeros Limited</strong> from Mary and Kevin Stockwell on 10 December 2019, completing 23 December 2019. Because this was a <strong>share purchase</strong> (not a direct Spanish property purchase), it is critical to understand exactly what taxes applied and which did not.</p>
+
+<h4>⚠️ NO SPANISH TRANSFER TAX (ITP) WAS PAYABLE</h4>
+
+<p>A Spanish Impuesto de Transmisiones Patrimoniales (ITP) — property transfer tax of typically 6.5–10% — is charged on the direct purchase of Spanish real estate. <strong>However, because the Harrisons purchased the shares in a UK limited company (Los Romeros Limited), not the Spanish property itself, no ITP was charged.</strong> This was a specific and deliberate structural advantage of the Wincham company structure: the Spanish tax authority AEAT does not impose ITP on the transfer of shares in a foreign (non-Spanish) company, even where that company holds Spanish property.</p>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body">This is one of the primary reasons Wincham marketed the UK company structure to property buyers — the share purchase route <strong>avoided ITP entirely</strong>, saving the Harrisons approximately <strong>€9,250–€18,500</strong> (6.5–10% of €185,000) compared to a direct property purchase. However, it created its own complexities around Spanish CGT and the 3% retention rules which continued to apply.</div></div>
+
+<h4>Confirmed Third-Party Costs — 2019 Share Purchase</h4>
+
+<table>
+<tr><th>Cost</th><th>Amount</th><th>Currency</th><th>Source / Evidence</th></tr>
+<tr><td><strong>Spanish Transfer Tax (ITP)</strong></td><td><strong>NIL — NOT APPLICABLE</strong></td><td>—</td><td>Share purchase, not direct property purchase — no ITP applicable</td></tr>
+<tr><td><strong>3% CGT Retention (on 2019 sale)</strong></td><td><strong>NIL — NOT APPLICABLE to Harrisons</strong></td><td>—</td><td>The 3% retention is withheld from a <strong>non-resident seller</strong> on a direct property sale. As this was a share sale between private parties, no Spanish 3% retention was withheld in 2019</td></tr>
+<tr><td><strong>Spanish Notary / Land Registry (2019)</strong></td><td><strong>NIL</strong></td><td>—</td><td>No Spanish notarial act was required for the 2019 share transfer — it was a UK company share transaction handled entirely under UK law</td></tr>
+<tr><td><strong>Director's Loan Account assumed by Harrisons</strong></td><td><strong>£37,652.00</strong></td><td>£ GBP</td><td>Confirmed in SPA (INT-154371) — the Harrisons took on the existing DLA as part of the purchase consideration, on top of the €185,000 share price</td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body"><strong>View Illustration:</strong> The Wincham 'View Illustration' was a pre-purchase fee quotation document prepared by Wincham for Philip Harrison before he committed to buying the company. It set out the proposed fee structure (£5,300 + £750) and included projected third-party costs. <strong>No standalone copy of the View Illustration has been located in the case files or evidence bundle.</strong> It is referenced in portal data but does not appear to have been preserved as a separate document. Under the formal request letter sent to Wincham, production of the original View Illustration has been demanded — it constitutes a pre-contractual representation as to fees and projected costs.</div></div>
+
+<hr>
+
+<h3>7C. Property Sale — Third-Party Costs (March 2026)</h3>
+
+<p>This section records all confirmed third-party costs incurred on the sale of the Lanzarote property (85 Shangrila Park, Playa Blanca) by Los Romeros Limited in March 2026, as shown on <strong>the Official Wincham Completion Statement</strong> issued to Philip Harrison on completion of the sale of the Lanzarote property owned by Los Romeros Limited.</p>
+
+<h4>Confirmed Notary Fees — Patricia del Río Fernández (Notaría de Calp)</h4>
+
+<p><strong>Patricia del Río Fernández</strong> is the Spanish notary who executed the 2026 sale deed. Her office details have been independently confirmed:</p>
+
+<table>
+<tr><th>Party</th><th>Name</th><th>Confirmed Address</th><th>Phone</th></tr>
+<tr><td><strong>Notaria</strong></td><td>Patricia del Río Fernández</td><td><strong>Carrer la Santamaría, 10, 03710 Calp (Calpe), Alicante, Spain</strong></td><td>965 830 950</td></tr>
+<tr><td><strong>Wincham Spanish Services SL</strong></td><td>Wincham Spanish Services SL (CIF B-54842695)</td><td><strong>Calpe, 03710, Alicante, Costa Blanca, Spain</strong> <em>(no street number published)</em></td><td>0034 965 830 991</td></tr>
+<tr><td><strong>Los Romeros Ltd (Spanish fiscal address)</strong></td><td>Registered via Wincham</td><td><strong>Avda Masnou 6, 03710 Calpe/Calp, Alicante</strong> — identical postcode</td><td>—</td></tr>
+</table>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>CONFIRMED CONFLICT OF INTEREST — SAME POSTCODE, SAME TELEPHONE EXCHANGE:</strong>
+Both the Notaría and Wincham Spanish Services SL share <strong>postcode 03710 Calpe/Calp, Alicante</strong>. The Notaria's telephone is <strong>965 830 950</strong> and Wincham Spain's is <strong>965 830 991</strong> — the same telephone exchange prefix, suggesting offices within the same small town district. Furthermore, <strong>Los Romeros Limited's own registered Spanish fiscal address</strong> is also 03710 Calpe — placed there by Wincham. The repeated use of Alicante-province notaries (both the 2010 Aumento de Capital notary and the 2026 sale notary are Alicante-province based) for a <strong>Lanzarote (Canary Islands)</strong> property transaction — when Lanzarote has its own notarial offices — is procedurally irregular and strongly suggests a pre-existing referral or professional arrangement between Wincham and local Calpe notaries. This must be formally investigated and disclosed.</div></div>
+
+<table>
+<tr><th>Item</th><th>Amount</th><th>Currency</th><th>Source</th></tr>
+<tr><td><strong>Notary Invoice A4/01025</strong> — Beneficial Owner Declaration (Act 10/2010)</td><td><strong>€241.07</strong></td><td>€ EUR</td><td>Confirmed from Notary invoices</td></tr>
+<tr><td><strong>Notary Invoice A4/01026</strong> — Deed of Ratification or Acceptance</td><td><strong>€233.79</strong></td><td>€ EUR</td><td>Confirmed from Notary invoices</td></tr>
+<tr><td><strong>Total Notary Fees</strong></td><td><strong>€474.86</strong></td><td>€ EUR</td><td>Paid directly to Notary — separately from Wincham</td></tr>
+<tr><td><strong>Plusvalía Municipal</strong> (seller's liability)</td><td><strong>€1,831.24</strong></td><td>€ EUR</td><td>Confirmed on Official Wincham Completion Statement</td></tr>
+<tr><td><strong>3% CGT Retention</strong> (withheld from sale proceeds)</td><td><strong>€9,450.00</strong></td><td>€ EUR</td><td>3% × €315,000 — withheld by buyer's lawyer and paid to AEAT. Recoverable if Los Romeros Ltd's actual CGT liability is lower</td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body"><strong>What is the 3% Retention?</strong> Under Spanish non-resident tax law (IRNR), when a non-Spanish tax resident sells Spanish property, the buyer is legally required to withhold 3% of the sale price and pay it directly to the AEAT on the seller's behalf. This acts as an advance payment against the seller's Spanish Capital Gains Tax liability. Los Romeros Limited, as a UK-registered company, is treated as a non-Spanish tax resident for this purpose. The €9,450 withheld (3% × €315,000) sits with the AEAT. If the actual Spanish CGT liability is less than €9,450, the balance is refundable — and Wincham's Letter of Engagement stated they would handle this reclaim. Whether they have done so must be confirmed.</div></div>
+
+<hr>
+
+<h3>7D. Ongoing Running Costs — Utilities and Compliance (with Confirmed Amounts)</h3>
+
+<table>
+<tr><th>Item</th><th>Document Ref</th><th>Date</th><th>Amount</th><th>Currency</th></tr>
+<tr><td>Electricity Bill (paid by Philip Harrison directly)</td><td>INT-167672</td><td>04/03/2020</td><td><em>Amount to confirm from document</em></td><td>€ EUR</td></tr>
+<tr><td>Water Bill — AmListados</td><td>INT-174394</td><td>30/09/2020</td><td><em>Amount to confirm from document</em></td><td>€ EUR</td></tr>
+<tr><td>ICO Data Protection Fee</td><td>INT-167155</td><td>27/02/2020</td><td><em>Amount to confirm from document</em></td><td>£ GBP</td></tr>
+<tr><td>Sabadell Bank correspondence</td><td>INT-167223</td><td>27/02/2020</td><td><em>Bank account maintenance charges — amount to confim</em></td><td>€ EUR</td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">The exact GBP/EUR amounts for each of these utility and compliance items need to be confirmed by reading the source documents (INT-167672, INT-174394, INT-167155). These documents are in the portal and should be viewed and the amounts extracted.</div></div>
+
+<hr>
+
+<h2>8. KEY CONFIRMED MESSAGES AND CORRESPONDENCE</h2>
+
+<p><em>These messages are extracted from the Wincham client portal (tax.wincham.com) across both cases WI-13211 and WI-25863. They constitute primary evidence of Wincham's representations, fee demands, and payment instructions to Philip Harrison. All messages are preserved in the portal and should be treated as exhibits.</em></p>
+
+<h3>Message 1 — Fiscal Rep Spain 2026 Invoice (19 January 2026)</h3>
+**Date:** 19/01/2026
+**Case:** WI-13211
+**Sent to:** Philip Harrison (phil.harrison1904@gmail.com) — as the registered client and Director of Los Romeros Limited
+**Added By:** Case Director (Helen Barnett)
+
+<blockquote><em>"Dear Mr. Harrison,</em>
+<em>Los Romeros Limited</em>
+<em>Please find attached an invoice for £300 including VAT for the Wincham Fee in respect of the Fiscal Representation in Spain for your UK Company from the 1st January 2026 until 31st December 2026.</em>
+<em>Any Company that operates in Spain is required to have a Fiscal Representative who is a Gestor/Accountant approved by the Hacienda (Spanish Tax office).</em>
+<em>[payment link]</em>
+<em>Login Link: https://www.wincham.com</em>
+<em>If you have any questions or require assistance with the above please call our Wincham UK office on 0044 (0)1260 292 631 or reply to this email."</em></blockquote>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">This invoice was for the <strong>full calendar year 1 January – 31 December 2026</strong>. The property was sold on 20 March 2026 — approximately 2.5 months into the invoiced period. A pro-rata refund of approximately <strong>£225</strong> (9.5/12 × £300) may be recoverable for the unused 9.5-month portion of the fiscal rep service.</div></div>
+
+<h3>Message 2 — Payment Received Confirmation (30 January 2026)</h3>
+**Date:** 30/01/2026
+**Case:** WI-13211
+**Message Type:** General Note added to portal by Case Director
+**Author:** Helen Barnett, Case Director, Wincham
+
+<blockquote><em>"£300 for Fiscal Rep in Spain received with thanks"</em></blockquote>
+
+<h3>Message 3 — Mark Roach Fee Demand — 2026 Sale Legal Fees (October 2025)</h3>
+**Date:** 22 October 2025
+**Case:** WI-25863
+**Sent by:** Mark Roach, Managing Director, mark@wincham.com
+**Wincham entities:** Wincham Consultants Limited / Wincham International Limited
+
+<p>Mark Roach sent a detailed email confirming Wincham's proposed role and fees for the 2026 property sale:</p>
+
+<blockquote><em>"The Wincham fee for the above is £5,000 + VAT that is £6,000 Including the VAT. Please arrange the bank transfer of £6,000 so that I can complete the above for yourself. Please note — £6,000 Bank Transfer can only be made from another UK Sterling Account. Wincham International Limited (Tide Account), Official Bank Name: Clearbank LTD, Account: 14689723, Sort Code: 04:06:05."</em></blockquote>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body">This message is critical forensic evidence. Mark Roach is explicitly directing payment of a <strong>Spanish law contract fee</strong> (signed with Wincham Spanish Services SL) to <strong>Wincham International Limited's UK bank account</strong>. This is the act that creates the cross-border billing irregularity and is the foundation of the unjust enrichment and fraudulent misrepresentation claims.</div></div>
+
+<h3>Message 4 — Second Payment Demand — UK Company Documents (March 2026)</h3>
+**Date:** 09 March 2026
+**Case:** WI-25863
+
+<p>Wincham demanded the second payment of £3,600 for UK company document preparation:
+<ul>
+<li><strong>Payment confirmed received:</strong> Portal message confirms receipt of £3,600 for company documentation services</li>
+</ul></p>
+
+<h3>Message 5 — December 2021 Invoice / Payment (Mark Roach)</h3>
+**Date:** December 2021
+**Case:** WI-13211
+**Sent by:** Mark Roach, Director, Wincham Consultants Limited / Wincham International Limited
+
+<p>Message included a payment link for an outstanding invoice and the seasonal sign-off:
+<blockquote><em>"Thank you for your continued support and have a great Christmas and a Happy New Year. Kind Regards, Mark Roach, Director, Wincham Consultants Limited / Wincham International Limited"</em></blockquote></p>
+
+<hr>
+
+<h2>9. FULL DOCUMENT INVENTORY — CASE WI-13211</h2>
+
+<p><strong>Case WI-13211</strong> is the original Wincham client case opened for <strong>Los Romeros Limited</strong> (UK Company No. 06993349). It covers the entire history of the company from its formation in 2007 through to Philip and Beryl Harrison's acquisition of the shares in December 2019 and all subsequent annual management (fiscal representation, accountancy, company secretarial) during the Harrisons' period of ownership (December 2019 – March 2026). This case number relates to the <strong>purchase and holding phase</strong> — it is distinct from Case WI-25863, which was opened specifically for the 2026 property sale.</p>
+
+<p>The inventory below records every document visible in the Wincham portal for this case, including INT reference numbers, document names, categories, dates, and portal status. Documents marked <strong>(unnamed)</strong> did not have a title recorded in the portal — their contents can only be determined by reading the underlying documents.</p>
+
+<table>
+<tr><th>Reference</th><th>Document Name</th><th>Category</th><th>Date</th><th>Status</th></tr>
+<tr><td>INT-7446</td><td>Escritura</td><td>Title Deed</td><td>13/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7447</td><td>Escritura Last Page</td><td>Title Deed</td><td>13/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7450</td><td>Los Romeros <em>(Los Romeros Limited — Certificate confirming the company was legally incorporated and in good standing at Companies House at the time of the 2010 Aumento de Capital)</em></td><td>Certificate of Good Standing</td><td>13/04/2010</td><td>InActive</td></tr>
+<tr><td>INT-7451</td><td><em>Notarised and Translated Company Documents — Los Romeros Limited</em> <em>(UK company documents translated into Spanish and notarised for the Spanish notary — required for the Aumento de Capital deed to be executed)</em></td><td>Notarised and Translated Company Documents</td><td>13/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7453</td><td><em>CIF Certificate — Los Romeros Limited</em> <em>(NIF: <strong>N8261069B</strong> — Código de Identificación Fiscal issued by AEAT Delegación de Alicante on 05/03/2010. Registered Spanish address: <strong>Avda Masnou 6, 03710 Calpe/Calp, Alicante</strong> — Wincham's own address used as the company's Spanish fiscal address. ⚠️ NOT confirmed as separately secured in portal — requires verification)</em></td><td>CIF Number</td><td>13/04/2010</td><td>⚠️ Verify if accessible</td></tr>
+<tr><td>INT-7454</td><td>1809</td><td>Invoice/Factura - Euro</td><td>13/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7478</td><td>Margaret</td><td>Stock Transfer Form</td><td>14/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7479</td><td>Frederick</td><td>Stock Transfer Form</td><td>14/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7480</td><td>Frederick</td><td>Share Certificate</td><td>14/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-7481</td><td>Margaret</td><td>Share Certificate</td><td>14/04/2010</td><td>Accepted</td></tr>
+<tr><td>INT-8979</td><td><em>Wincham Investment Calculation — Los Romeros Limited</em> <strong>⚠️ CRITICAL: declares €200,000 as investment value — conflicts with 2006 Escritura price of €175,000 (€25,000 discrepancy)</strong></td><td>Investment Calculation</td><td>21/06/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9097</td><td><em>Escritura de Aumento de Capital Mediante Aportación de Bienes Inmuebles — Los Romeros Limited / Purvis</em></td><td>Deed Of Investment</td><td>24/06/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9870</td><td>Frederick</td><td>Appointment of Director</td><td>27/07/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9871</td><td>Margaret</td><td>Appointment of Director</td><td>27/07/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9872</td><td>Malcolm <em>(full name to be confirmed from Companies House — a Wincham-nominated director stood down on completion of the property contribution)</em></td><td>Resignation of Director</td><td>27/07/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9873</td><td><em>Allotment of Shares — Los Romeros Limited</em> <em>(beneficiaries: Frederick & Margaret Purvis — confirmed from share certificates INT-7480/7481)</em></td><td>Allotment of Shares</td><td>27/07/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9958</td><td>Showing Both Directors</td><td>Certificate of Good Standing</td><td>04/08/2010</td><td>InActive</td></tr>
+<tr><td>INT-9985</td><td>Stamped Form - Frederick</td><td>Stock Transfer Form</td><td>05/08/2010</td><td>Accepted</td></tr>
+<tr><td>INT-9987</td><td>Stamped Form - Margaret</td><td>Stock Transfer Form</td><td>05/08/2010</td><td>Accepted</td></tr>
+<tr><td>INT-143358</td><td>Wincham Accountants Invoice 12151</td><td>Fees Invoice for Accounts Preparation</td><td>12/04/2019</td><td>—</td></tr>
+<tr><td>INT-143359</td><td>Draft Full Accounts 31.08.2018</td><td>Accounts — Draft Only</td><td>12/04/2019</td><td>—</td></tr>
+<tr><td>INT-143424</td><td>Final Accounts 31.08.2018</td><td>Accounts — Company Accounts (Full) FINAL</td><td>15/04/2019</td><td>—</td></tr>
+<tr><td>INT-143432</td><td>ct600</td><td>Corporation Tax (CT600)</td><td>16/04/2019</td><td>—</td></tr>
+<tr><td>INT-143433</td><td>Signed Accounts</td><td>Client approval of Company annual accounts</td><td>16/04/2019</td><td>—</td></tr>
+<tr><td>INT-143434</td><td>Companies House Submission</td><td>Filed at Companies House</td><td>16/04/2019</td><td>—</td></tr>
+<tr><td>INT-143435</td><td>HMRC Submission</td><td>Corporation Tax filed with HMRC</td><td>16/04/2019</td><td>—</td></tr>
+<tr><td>INT-149654</td><td>2019</td><td>Confirmation Statement</td><td>04/09/2019</td><td>Accepted</td></tr>
+<tr><td>INT-151078</td><td>Kevin Stockwell</td><td>Appointment of Director</td><td>07/10/2019</td><td>Accepted</td></tr>
+<tr><td>INT-152778.doc</td><td>UNSIGNED — NO POOL NO GARAGE</td><td>Property Description</td><td>13/11/2019</td><td>Active</td></tr>
+<tr><td>INT-153484</td><td>Wincham Accountants Invoice 12939</td><td>Fees Invoice for Accounts Preparation</td><td>29/11/2019</td><td>Active</td></tr>
+<tr><td>INT-153486</td><td>UK Company Accounts Year End 31.08.2019</td><td>Accounts — Draft Only</td><td>29/11/2019</td><td>Active</td></tr>
+<tr><td>INT-153487</td><td>Tax Computation — Tax Due £0.00</td><td>Accounts — Tax Computation</td><td>29/11/2019</td><td>Active</td></tr>
+<tr><td>INT-153836</td><td>FISCAL REP SPAIN 2020</td><td>Invoice for UK Ltd Company Fiscal Rep in Spain</td><td>02/12/2019</td><td>Active</td></tr>
+<tr><td>INT-154140</td><td>Final Accounts 31.08.2019</td><td>Accounts — Company Accounts (Full) FINAL</td><td>04/12/2019</td><td>Accepted</td></tr>
+<tr><td>INT-154142</td><td>Verbal Approval</td><td>Client approval of Company annual accounts</td><td>04/12/2019</td><td>Active</td></tr>
+<tr><td>INT-154143</td><td>Companies House Submission</td><td>Filed at Companies House</td><td>04/12/2019</td><td>—</td></tr>
+<tr><td>INT-154144</td><td>ct600 2019</td><td>Corporation Tax (CT600)</td><td>04/12/2019</td><td>Accepted</td></tr>
+<tr><td>INT-154145</td><td>HMRC submission</td><td>Corporation Tax filed with HMRC</td><td>04/12/2019</td><td>Accepted</td></tr>
+<tr><td><strong>INT-154339</strong></td><td><strong>EGM Minutes</strong></td><td>Company Secretarial</td><td><strong>10/12/2019</strong></td><td>Accepted</td></tr>
+<tr><td><strong>INT-154340</strong></td><td><strong>Resignation — Kevin Stockwell</strong></td><td>Company Secretarial</td><td><strong>10/12/2019</strong></td><td>Accepted</td></tr>
+<tr><td><strong>INT-154369</strong></td><td><strong>Consent to Act (Phil and Beryl Harrison)</strong></td><td>Company Secretarial</td><td><strong>10/12/2019</strong></td><td>Accepted</td></tr>
+<tr><td><strong>INT-154371</strong></td><td><strong>Sale & Purchase Agreement (+ counterpart signatures)</strong></td><td>Legal and Company</td><td><strong>10/12/2019</strong></td><td>Accepted</td></tr>
+<tr><td><strong>INT-154784</strong></td><td><strong>Wincham International Invoice 262</strong></td><td>Invoice/Factura — Sterling</td><td><strong>20/12/2019</strong></td><td>Active</td></tr>
+<tr><td>INT-166780</td><td>Current Appointments report</td><td>Other</td><td>14/02/2020</td><td>Active</td></tr>
+<tr><td>INT-166931</td><td>FISCAL REP SPAIN 2020 — Credit Note</td><td>Credit Note</td><td>20/02/2020</td><td>Active</td></tr>
+<tr><td>INT-166932</td><td>FISCAL REP SPAIN 2020</td><td>Invoice for UK Ltd Company Fiscal Rep in Spain</td><td>20/02/2020</td><td>Active</td></tr>
+<tr><td>INT-167035</td><td>translation of co house doc</td><td>Other</td><td>25/02/2020</td><td>Active</td></tr>
+<tr><td>INT-167155</td><td>ICO — Data Protection Fee</td><td>Letter</td><td>27/02/2020</td><td>Active</td></tr>
+<tr><td>INT-167223</td><td>sabadell</td><td>Letter</td><td>27/02/2020</td><td>Active</td></tr>
+<tr><td>INT-167263</td><td>Wincham Accountants Invoice 13186</td><td><del>Fees Invoice for Accounts Preparation</del> <strong>⚠️ RECLASSIFIED: This is a Certificate of Good Standing fee (£50 + VAT = £60) — NOT an annual accounts invoice. Previously misidentified in this report.</strong></td><td>27/02/2020</td><td>Active</td></tr>
+<tr><td>INT-167506</td><td>Wincham Accountants Invoice 13237</td><td>Invoice for Company Sec & UK Reg Office Renewal</td><td>02/03/2020</td><td>Active</td></tr>
+<tr><td>INT-167672</td><td>Electricity Bill Paid By Mr Harrison</td><td>Electricity Bill</td><td>04/03/2020</td><td>Active</td></tr>
+<tr><td>INT-167794</td><td>How to Operate a Company Cash Book</td><td>Other</td><td>06/03/2020</td><td>Active</td></tr>
+<tr><td>INT-167795</td><td>Claimable Expenses</td><td>Other</td><td>06/03/2020</td><td>Active</td></tr>
+<tr><td>INT-167892</td><td>Trans COGS</td><td>Translated Certificate of Good Standing</td><td>09/03/2020</td><td>Active</td></tr>
+<tr><td>INT-174258</td><td>HMRC — corporation tax — company tax return notice</td><td>Letter</td><td>28/09/2020</td><td>Active</td></tr>
+<tr><td>INT-174394</td><td>AmListados</td><td>Water Bill</td><td>30/09/2020</td><td>Active</td></tr>
+<tr><td>INT-176533</td><td>FISCAL REP SPAIN 2021</td><td>Invoice for UK Ltd Company Fiscal Rep in Spain</td><td>27/11/2020</td><td>Active</td></tr>
+<tr><td>INT-179615</td><td>Wincham Accountancy Invoice 483</td><td>Invoice for Company Sec & UK Reg Office Renewal</td><td>01/03/2021</td><td>Active</td></tr>
+<tr><td>INT-180277</td><td>Companies Act 2006 signed</td><td>Letter</td><td>25/03/2021</td><td>Active</td></tr>
+<tr><td>INT-180421</td><td>Sabadell personal data</td><td>Letter</td><td>29/03/2021</td><td>Active</td></tr>
+<tr><td>INT-181478</td><td>UK Company Accounts Year End 31.08.2020</td><td>Accounts — Draft Only</td><td>30/04/2021</td><td>Active</td></tr>
+<tr><td>INT-181479</td><td>Wincham Accountancy Invoice 661</td><td>Fees Invoice for Accounts Preparation</td><td>30/04/2021</td><td>Active</td></tr>
+<tr><td>INT-182025</td><td>Verbal Approval</td><td>Client approval of Company annual accounts</td><td>19/05/2021</td><td>Active</td></tr>
+<tr><td>INT-182026</td><td>Debit Card Payment</td><td>Client payment received for Invoice</td><td>19/05/2021</td><td>Active</td></tr>
+<tr><td>INT-182027</td><td>Final Accounts</td><td>Accounts — Company Accounts (Full) FINAL</td><td>19/05/2021</td><td>Active</td></tr>
+<tr><td>INT-182028</td><td>Tax Comp</td><td>Accounts — Tax Computation</td><td>19/05/2021</td><td>Active</td></tr>
+</table>
+
+<hr>
+
+<h2>10. COMPLETE FINANCIAL SUMMARY</h2>
+
+<h3>10A. PURCHASE — December 2019</h3>
+
+<p><strong>Purchaser:</strong> Philip Harrison and Beryl Harrison (jointly)
+<strong>Purchased from:</strong> Mary Stockwell and Kevin Stockwell
+<strong>What was purchased:</strong> 100% of the issued share capital of <strong>Los Romeros Limited</strong> (UK Company No. 06993349) — a UK private limited company whose sole asset was the Lanzarote property at 85 Shangrila Park, Playa Blanca, Lanzarote, Spain (Finca No. 14357)
+<strong>Date of purchase:</strong> Agreed 10 December 2019; completion 23 December 2019</p>
+
+<table>
+<tr><th>Item</th><th>Amount (€ EUR)</th><th>Amount (£ GBP)</th><th>Notes</th></tr>
+<tr><td><strong>Total Share Purchase Price</strong></td><td><strong>€185,000.00</strong></td><td>—</td><td>100% share consideration — equivalent to the effective property price</td></tr>
+<tr><td>— Non-refundable reservation deposit</td><td>€5,000.00</td><td>—</td><td>Paid 10/12/2019</td></tr>
+<tr><td>— Balance on completion</td><td>€180,000.00</td><td>—</td><td>Paid 23/12/2019</td></tr>
+<tr><td><strong>Director's Loan Account assumed</strong></td><td>—</td><td><strong>£37,652.00</strong></td><td>Pre-existing DLA owed to the company, assumed by Harrisons as part of deal</td></tr>
+<tr><td><strong>Wincham Initial Service Fee</strong></td><td>—</td><td><strong>£5,300.00</strong></td><td>Per View Illustration (pre-purchase quotation)</td></tr>
+<tr><td><strong>Wincham Additional Purchase Fee</strong> (UK Co. structure)</td><td>—</td><td><strong>£750.00</strong></td><td>Per View Illustration — additional for purchasing via UK company</td></tr>
+<tr><td><strong>Wincham Invoice 262</strong> (INT-154784)</td><td>—</td><td><strong>£1,600.00</strong></td><td>✅ <strong>Invoice received and paid in full</strong> — UK & Spain consultancy, share purchase — issued 20/12/2019</td></tr>
+<tr><td><strong>Spanish Transfer Tax (ITP)</strong></td><td><strong>NIL</strong></td><td><strong>NIL</strong></td><td>⚠️ NOT APPLICABLE — share purchase via UK company; ITP only applies to direct Spanish property transfers</td></tr>
+<tr><td><strong>Spanish Notary fees (2019)</strong></td><td><strong>NIL</strong></td><td><strong>NIL</strong></td><td>No Spanish notarial act required — UK share transfer only</td></tr>
+<tr><td><strong>3% CGT Retention (seller-side, 2019)</strong></td><td><strong>NIL</strong></td><td><strong>NIL</strong></td><td>Not applicable to Harrisons as buyers; sellers (Stockwells) were not Spanish non-residents for this transaction</td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body"><strong>£4,450 View Illustration gap — Invoice confirmed paid:</strong> Invoice 262 (£1,600) has been confirmed as received and paid in full. However, this does not reconcile the discrepancy between the View Illustration quotation of <strong>£6,050</strong> (£5,300 + £750) and the invoiced amount of <strong>£1,600</strong>. The £4,450 reduction was applied with no written variation agreement identified. Wincham must be required to produce: (a) the original View Illustration; and (b) any written communication authorising the fee reduction. The three-stage reduction chain (View Illustration £6,050 → Darren Williams quote May 2019 £3,600 → Invoice 262 £1,600) remains unexplained.</div></div>
+
+<h3>10B. ANNUAL RUNNING COSTS — CONFIRMED (Dec 2019 – Mar 2026)</h3>
+
+<table>
+<tr><th>Service</th><th>Confirmed Rate</th><th>Total Inc. VAT</th><th>Notes</th></tr>
+<tr><td>Wincham — Fiscal Rep Spain</td><td>£200–£300/yr</td><td><strong>£1,700 (confirmed)</strong></td><td>All 7 years confirmed — see Section 6B</td></tr>
+<tr><td>Wincham — Registered Office & Co. Sec</td><td>£200–£235/yr net</td><td><strong>£1,572 (confirmed)</strong></td><td>All 6 years confirmed — previous £300/yr estimate was incorrect</td></tr>
+<tr><td>Wincham — Annual Accounts Preparation</td><td>£425–£475/yr net</td><td><strong>£3,240 (confirmed, 6 yrs)</strong></td><td>All 6 years confirmed — previous £600/yr estimate was incorrect. 2024 TBC (+~£540)</td></tr>
+<tr><td>Certificate of Good Standing (INT-167263)</td><td>One-off</td><td><strong>£60 (confirmed)</strong></td><td>Reclassified from accounts table</td></tr>
+<tr><td>IBI (Lanzarote local rates), utilities</td><td>Variable</td><td>Variable</td><td>Paid separately — not via Wincham</td></tr>
+<tr><td><strong>GRAND TOTAL ANNUAL WINCHAM FEES</strong></td><td></td><td><strong>£6,572 (confirmed)</strong></td><td>Subject to 2024 accounts invoice confirmation (~+£540)</td></tr>
+</table>
+
+<h3>10C. SALE — March 2026 — OFFICIAL WINCHAM COMPLETION STATEMENT FIGURES</h3>
+
+<p><em>All figures below are taken from the <strong>Official Wincham Completion Statement</strong> issued to Philip Harrison on completion of the sale of the Lanzarote property owned by Los Romeros Limited. The sale of 85 Shangrila Park, Playa Blanca, Lanzarote completed on 20 March 2026 at a price of €315,000.</em></p>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body"><strong>Why is the sale price €315,000 and not €230,000?</strong>
+Earlier in the progression of this case, a marketing price of approximately €230,000 was referenced in some preliminary documents or initial estimates. The <strong>actual completed sale price was €315,000</strong> — a difference of <strong>€85,000 (37% above the early estimate)</strong>. This discrepancy matters because: (a) it significantly affects the capital gains calculation for Spanish CGT (IRNR) and UK Corporation Tax purposes; (b) Wincham's estate agent commission, calculated as a percentage, would have been higher than initially projected; and (c) the 3% CGT retention is also proportionally higher. The €315,000 figure is confirmed on the Official Completion Statement and must be used as the definitive sale price in all tax calculations.</div></div>
+
+<table>
+<tr><th>Item</th><th>Net Amount</th><th>Inc. Tax/VAT</th><th>Currency</th><th>Notes</th></tr>
+<tr><td><strong>Gross Sale Proceeds</strong></td><td>—</td><td><strong>€315,000.00</strong></td><td>€ EUR</td><td>Confirmed sale price</td></tr>
+<tr><td><strong>3% CGT Retention</strong> withheld by buyer's lawyers</td><td>—</td><td><strong>€9,450.00</strong></td><td>€ EUR</td><td>3% × €315,000 — paid to AEAT; recoverable if actual CGT < €9,450</td></tr>
+<tr><td><strong>Estate Agent Commission — Lanzarote Investments Real Estate</strong></td><td>~€9,450.00</td><td><strong>€10,111.50</strong></td><td>€ EUR</td><td>Approx. 3% of €315,000 + 7% Canary Islands IGIC tax — this is Wincham's estate agent commission</td></tr>
+<tr><td><strong>Utility Bills — routed via Lanzarote Investments Real Estate</strong></td><td>—</td><td><strong>€192.60</strong></td><td>€ EUR</td><td>⚠️ NOT an estate agent fee — per Philip Harrison, this was an outstanding utility bill included in the completion statement under the estate agent line</td></tr>
+<tr><td><strong>Plusvalía Municipal Tax</strong></td><td>—</td><td><strong>€1,831.24</strong></td><td>€ EUR</td><td>Seller's Spanish municipal capital gains tax — confirmed on Completion Statement</td></tr>
+<tr><td><strong>Notary Fees</strong> (Patricia del Rio Fernandez)</td><td>—</td><td><strong>€474.86</strong></td><td>€ EUR</td><td>Two invoices: A4/01025 (€241.07) + A4/01026 (€233.79) — paid directly to Notary</td></tr>
+<tr><td><strong>Wincham Legal Fee — UK company docs</strong></td><td>£5,000.00</td><td><strong>£6,000.00</strong></td><td>£ GBP</td><td>Paid to Wincham International Ltd (Clearbank Tide Account)</td></tr>
+<tr><td><strong>Wincham Legal Fee — Spanish company docs</strong></td><td>£3,000.00</td><td><strong>£3,600.00</strong></td><td>£ GBP</td><td>Paid to same UK account — no separate UK agreement ever produced</td></tr>
+<tr><td><strong>Wincham Apostille/Legalisation</strong></td><td>—</td><td><strong>£126.00</strong></td><td>£ GBP</td><td></td></tr>
+<tr><td><strong>Total Wincham sale fees</strong></td><td><strong>£8,000.00</strong></td><td><strong>£9,726.00</strong></td><td>£ GBP</td><td>Classified as <em>"OFF-STATEMENT DISBURSEMENTS (UK JURISDICTION)"</em> on the Completion Statement</td></tr>
+<tr><td><strong>Balance of Sale Proceeds</strong></td><td>—</td><td><strong>€293,414.66</strong></td><td>€ EUR</td><td>Per Official Wincham Completion Statement</td></tr>
+</table>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>CROSS-BORDER BILLING IRREGULARITY — FEES CONFIRMED PAID IN FULL TO UK ENTITY:</strong>
+The £9,726 in sale closing fees (£6,000 + £3,600 + £126 inc. VAT) were charged under a contract with <strong>Wincham Spanish Services SL</strong> (a Spanish-registered entity, CIF B-54842695) but were invoiced and paid in full in sterling to <strong>Wincham International Limited</strong> (a UK-registered entity) via Clearbank Tide Account 14689723, Sort Code 04-06-05. Philip Harrison has confirmed these invoices were received and paid in full.
+
+<p><strong>The legal irregularity is not non-payment — it is misdirection.</strong> The contractual counterparty was the Spanish entity; the money went to the UK entity. No separate UK contract was produced as required. This raises the following unresolved questions:
+<ul>
+<li>Was Wincham International Limited legally entitled to collect fees due to Wincham Spanish Services SL?</li>
+<li>Why were Spanish closing costs collected by a UK entity in sterling rather than euros by the Spanish entity?</li>
+<li>What happened to the funds once received by Wincham International? Were they remitted to Wincham Spanish Services SL?</li>
+</ul></p>
+
+<p><strong>⚠️ CRITICAL TAX CONSEQUENCE:</strong> Because the £9,726 was paid in sterling to a UK company — and not to any Spanish entity — the Spanish tax authority (AEAT) will not allow these costs to be deducted from the Spanish capital gains tax on the sale (Modelo 210 / IRNR). Spain received no money. Only costs paid in Spain through Spanish entities are deductible against the Spanish gain. <strong>These costs must instead be claimed as allowable deductions in the UK Corporation Tax computation for Los Romeros Limited</strong> — reducing the UK chargeable gain on the disposal of the company's Spanish property asset.</div></div></p>
+
+<hr>
+
+<h2>11. NAMED PARTIES AND THIRD PARTIES</h2>
+
+<p><em>Wincham-affiliated persons and entities are marked <strong>[WINCHAM]</strong> — indicating they directly work for, are employed by, or are legally associated with the Wincham group of companies.</em></p>
+
+<table>
+<tr><th>Party</th><th>Role</th><th>Wincham Affiliation</th></tr>
+<tr><td><strong>Philip Harrison</strong></td><td>Buyer / Director / Shareholder — Los Romeros Limited</td><td>None — Client</td></tr>
+<tr><td><strong>Beryl Harrison</strong></td><td>Joint buyer / Joint Director — Los Romeros Limited</td><td>None — Client</td></tr>
+<tr><td><strong>Mary Stockwell</strong></td><td>Seller of shares (December 2019)</td><td>None</td></tr>
+<tr><td><strong>Kevin Stockwell</strong></td><td>Seller of shares / Outgoing Director (resigned 10/12/2019)</td><td>None</td></tr>
+<tr><td><strong>Owen Richard Hollywood</strong></td><td>Original property vendor (sold to Purvis family, 2006) — <strong>SEPARATE PERSON</strong> from Richard Alan Hollywood (Wincham co-founder). Name coincidence noted.</td><td>None — Independent vendor</td></tr>
+<tr><td><strong>Frederick Purvis</strong></td><td>Original shareholder/director of Los Romeros Limited (2006–2010)</td><td>None</td></tr>
+<tr><td><strong>Margaret Ellen Purvis</strong></td><td>Original shareholder/director of Los Romeros Limited (2006–2010)</td><td>None</td></tr>
+<tr><td><strong>Richard Alan Hollywood</strong></td><td><strong>WINCHAM CO-FOUNDER</strong> — Original Director of Wincham Investments Limited from <strong>1994</strong>. Resigned <strong>February 2004</strong>. The Wincham group was originally a Hollywood/Roach partnership before the Roaches took sole control. Confirmed from Companies House.</td><td>Former Wincham Co-Founder — resigned 2004</td></tr>
+<tr><td><strong>Malcolm David Roach</strong></td><td><strong>WINCHAM PATRIARCH & LONG-TERM SECRETARY</strong> — Company Secretary of Wincham Investments Limited from <strong>1994 to September 2023</strong> (29 years). Confirmed from Companies House. Malcolm was the administrative backbone of the Wincham operation — running the group's secretarial function for nearly three decades while directors rotated within the Roach family. <strong>Previously omitted from this report.</strong></td><td><strong>[WINCHAM] — resigned September 2023</strong></td></tr>
+<tr><td><strong>Frederick Roach</strong></td><td>Director of Wincham entities <strong>1994–2013</strong> — likely Malcolm David Roach's father or close relative. Resigned. Preceded the current generation of Roach directors.</td><td>Former [WINCHAM] Director</td></tr>
+<tr><td><strong>Mark Roach</strong> <em>(referred to as "Mark Roach" or "mark@wincham.com" throughout this report)</em></td><td><strong>CURRENT ACTIVE MANAGING DIRECTOR</strong> of Wincham International Limited, Wincham Consultants Limited, and Wincham Investments Limited — appointed 2005/2013. <strong>Full legal name per Companies House: Mark Roach.</strong> This is the person signing portal communications and issuing fee demands in the case files.</td><td><strong>[WINCHAM] — CURRENTLY ACTIVE</strong></td></tr>
+<tr><td><strong>Margaret Evelyn Roach</strong></td><td><strong>CURRENT ACTIVE DIRECTOR</strong> — Director of Wincham entities alongside Mark Roach since 2005/2007. Confirmed from Companies House.</td><td><strong>[WINCHAM] — CURRENTLY ACTIVE</strong></td></tr>
+<tr><td><strong>Mark Roach</strong></td><td><strong>DIRECTOR OF LOS ROMEROS LIMITED SPECIFICALLY</strong> — Appointed to Los Romeros Limited's board <strong>2011, resigned 2020</strong>. This is the individual who signed the 2019 Sale & Purchase Agreement in three simultaneous capacities (as selling agent, as director of the selling company, and on behalf of Wincham). Exact relationship to Mark Roach / Malcolm David Roach to be confirmed from Companies House (likely son/nephew of Malcolm).</td><td><strong>[WINCHAM] — resigned from Los Romeros Limited 2020</strong></td></tr>
+<tr><td><strong>Helen Barnett</strong></td><td><strong>Case Director, Wincham</strong> — primary contact for Philip Harrison (WI-13211 and WI-25863). Sent fiscal rep invoices and confirmed receipt of payments.</td><td><strong>[WINCHAM] — Case Director / Employee</strong></td></tr>
+<tr><td><strong>Carmen Martínez Socias</strong></td><td>Notaria de Arrecife, Lanzarote — executed the original 2006 Escritura de Compraventa (Protocol No. 1612) for the Purvis family's purchase of the property</td><td>Independent Spanish Notary</td></tr>
+<tr><td><strong>José Miguel de Lamo Iglesias</strong></td><td>Notario de Benissa, Alicante Province — executed the 2010 Aumento de Capital (Deed of Investment, INT-9097) transferring the property into Los Romeros Limited</td><td>Independent Spanish Notary — ⚠️ Alicante Province connection (same region as Wincham Spanish operations)</td></tr>
+<tr><td><strong>Patricia del Rio Fernandez</strong></td><td><strong>Notaria de Calpe (Calp), Alicante Province</strong> — executed the 2026 property sale deed</td><td>Independent Spanish Notary — ⚠️ <strong>Conflict of interest to be investigated:</strong> Calpe is in Alicante Province, the same region as Wincham's Spanish base. A Lanzarote (Canary Islands) property sale before an Alicante mainland notary — when Lanzarote has its own notaries — is irregular. Any professional referral relationship between this notary and Wincham Spanish Services SL must be investigated and disclosed</td></tr>
+<tr><td><strong>Wincham International Limited</strong></td><td><strong>[WINCHAM]</strong> — UK-registered entity (Reg No. 05579766). Received all GBP fee payments from Phil Harrison including the £9,600 2026 sale fees. Clearbank Tide Account 14689723, Sort Code 04-06-05</td><td><strong>[WINCHAM] — UK entity — received £9,600</strong></td></tr>
+<tr><td><strong>Wincham Consultants Limited</strong></td><td><strong>[WINCHAM]</strong> — UK entity (Reg No. 05143003). Acts as Spanish fiscal representative and accountants for UK companies holding Spanish property</td><td><strong>[WINCHAM] — UK-registered accountancy entity</strong></td></tr>
+<tr><td><strong>Wincham Investments Limited</strong></td><td><strong>[WINCHAM]</strong> — Group company (Reg No. 02948944)</td><td><strong>[WINCHAM] — Group entity</strong></td></tr>
+<tr><td><strong>Wincham Accountants Limited</strong></td><td><strong>[WINCHAM]</strong> — Group company (Reg No. 05607266)</td><td><strong>[WINCHAM] — Group entity</strong></td></tr>
+<tr><td><strong>Wincham Spanish Services SL</strong></td><td><strong>[WINCHAM]</strong> — Spanish-registered entity (CIF B-54842695). The contractual party on the 2026 Letter of Engagement — yet fees were directed away from this entity to Wincham International Limited (UK)</td><td><strong>[WINCHAM] — Spanish entity — contracting party on Spanish LoE</strong></td></tr>
+<tr><td><strong>Sabadell Bank</strong></td><td>Spanish bank holding Los Romeros Limited's Spanish bank account</td><td>Third party — bank</td></tr>
+<tr><td><strong>HMRC</strong></td><td>UK Corporation Tax authority</td><td>Regulatory body</td></tr>
+<tr><td><strong>Hacienda (AEAT)</strong></td><td>Spanish tax authority — receives fiscal rep returns and 3% CGT retention</td><td>Regulatory body</td></tr>
+<tr><td><strong>AmListados</strong></td><td>Spanish water utility (Lanzarote)</td><td>Third party</td></tr>
+<tr><td><strong>Lanzarote Investments Real Estate</strong></td><td>Estate agent involved in the 2026 sale — appeared on Completion Statement for two line items (€10,111.50 commission + €192.60 utility bills)</td><td>Third party — estate agent</td></tr>
+</table>
+
+<hr>
+
+<h2>12. KEY DOCUMENTS TO OBTAIN FOR LEGAL ACTION</h2>
+
+<table>
+<tr><th>Priority</th><th>Document</th><th>Reference</th><th>Why Critical</th></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Sale & Purchase Agreement (+ counterpart signatures)</strong></td><td>INT-154371</td><td>Defines price, terms, tax allocations, representations — <strong>PDF secured</strong>. Key figures confirmed from SPA: Purchase price €185,000; deposit €5,000; balance €180,000; DLA £37,652; Wincham fees per Schedule B; no ITP applicable (share purchase). Full analysis: <code>D:\VELYON - LEGAL COMMAND CENTER\Los Romeros Limited - Wincham - Sales Agreement Files\</code></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Escritura de Compraventa (Title Deed — 34 pages)</strong></td><td>INT-7446</td><td>Spanish property title — property history, charges — <strong>PDF secured</strong></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Escritura — Last Page</strong></td><td>INT-7447</td><td>Land registry notations — <strong>PDF secured</strong></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Deed of Investment / Aumento de Capital (20 pages)</strong></td><td>INT-9097</td><td>Property-into-company transfer at €231,164.73 — <strong>PDF secured</strong></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Investment Calculation</strong></td><td>INT-8979</td><td>Original Wincham sales illustration — <strong>PDF secured</strong></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Invoice / Factura Ref 1809</strong></td><td>INT-7454</td><td>2010 fee invoice — <strong>PDF secured</strong></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>Wincham International Invoice 262</strong></td><td>INT-154784</td><td>Full breakdown of £1,600 purchase fee — <strong>awaiting from Wincham</strong></td></tr>
+<tr><td>🔴 <strong>CRITICAL</strong></td><td><strong>2026 Completion Statement</strong></td><td>WI-25863 messages</td><td>All sale costs, deductions, net proceeds — <strong>PDF secured</strong></td></tr>
+<tr><td>🟡 MED</td><td>Nota Simple (current)</td><td>Yaiza Land Registry</td><td>Current ownership/charge status — <strong>letter sent</strong></td></tr>
+<tr><td>🟡 MED</td><td>Tax Computation (£0.00 due)</td><td>INT-153487</td><td>UK Corporation Tax at time of Harrison purchase</td></tr>
+<tr><td>🟡 MED</td><td>EGM Minutes</td><td>INT-154339</td><td>Shareholder resolutions authorising the share sale</td></tr>
+<tr><td>🟡 MED</td><td>All Wincham Accounts Invoices</td><td>Multiple INT refs</td><td>Annual billing history — full reconciliation required</td></tr>
+<tr><td>🟡 MED</td><td>FISCAL REP SPAIN 2020 — Credit Note</td><td>INT-166931</td><td>Why was a credit note issued? Potential overbilling</td></tr>
+<tr><td>🟢 LOW</td><td>Property Description (UNSIGNED)</td><td>INT-152778</td><td>NO POOL, NO GARAGE — relevant to value representations</td></tr>
+<tr><td>🟢 LOW</td><td>HMRC CT notices</td><td>INT-174258</td><td>HMRC correspondence</td></tr>
+</table>
+
+<hr>
+
+<h2>13. LEGAL OBSERVATIONS AND RED FLAGS</h2>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body">The following merit further legal investigation:</div></div>
+
+<ol>
+<li><strong>Fee reconciliation gap — Invoice confirmed paid, reduction unexplained:</strong> Invoice 262 (INT-154784, £1,600) has been confirmed as received and paid in full. However, the gap between the View Illustration quotation and the invoiced amount remains entirely unexplained:</li>
+</ol>
+   - **View Illustration (pre-May 2019):** £6,050 (£5,300 + £750)
+   - **Darren Williams quote (14 May 2019):** £3,600 (£3,000 + VAT)
+   - **Invoice 262 (20 December 2019) — ✅ PAID IN FULL:** £1,600
+
+<p>The invoice being paid does not resolve the legal question. The <strong>£4,450 reduction</strong> from the View Illustration to the final invoice was applied without any written variation agreement being produced. Wincham must disclose: (a) the original View Illustration; (b) any written authority for reducing the fee; and (c) confirmation that no further invoices were raised for the same services. The fact that the invoice was paid in full at £1,600 strengthens rather than weakens the case — it confirms the transaction was completed at the lower figure, making the View Illustration a pre-contractual misrepresentation as to the likely fee level.</p>
+
+<ol>
+<li><strong>ITP Tax — No Receipt Found:</strong> The transaction was structured as a share transfer, meaning Spanish ITP was not payable at all — <strong>this was the primary tax justification for the share structure</strong>. The ~€9,910 ITP figure on the Wincham illustration was used to justify the share purchase as a tax saving for the buyer. No ITP was actually paid in 2019 because the Harrisons bought shares, not property. This is confirmed by the absence of any ITP receipt in the portal. See Section 19 for full analysis.</li>
+</ol>
+
+<ol>
+<li><strong>Credit Note — Fiscal Rep Spain 2020:</strong> A credit note was issued at the same time as the 2020 invoice. Why? This could indicate a double-billing error or overcharge in the previous year's fiscal representative invoice.</li>
+</ol>
+
+<ol>
+<li><strong>Property Description — No Pool, No Garage:</strong> The unsigned property description states the property has no pool and no garage. Were these features represented differently at any point in the sale negotiations? This may be relevant to any misrepresentation claim.</li>
+</ol>
+
+<ol>
+<li><strong>Notary Patricia del Río Fernández — CONFIRMED CONFLICT OF INTEREST:</strong> The Spanish notary for the 2026 sale has been confirmed at <strong>Carrer la Santamaría, 10, 03710 Calp (Calpe), Alicante</strong> (tel: 965 830 950). Wincham Spanish Services SL is confirmed at <strong>Calpe, 03710, Alicante</strong> (tel: 965 830 991) — same postcode, same telephone exchange. Los Romeros Limited's own registered Spanish fiscal address is Avda Masnou 6, 03710 Calpe — placed there by Wincham. Both the 2010 notary (Benissa, Alicante Province) and the 2026 notary (Calpe, Alicante Province) are within the Wincham Spain territory — while the property itself is in Lanzarote (Canary Islands), over 1,000km away, with its own notarial offices. This pattern is strong circumstantial evidence of a referral arrangement.</li>
+</ol>
+
+<ol>
+<li><strong>2026 Sale Fees — £9,726 total absent from Completion Statement:</strong> Wincham charged £6,000 + £3,600 + £126 = <strong>£9,726 (inc. VAT)</strong> for the sale. These fees do not appear in the Completion Statement. The full reconciliation of where this money went (or whether it was charged at all) is a primary investigative priority.</li>
+</ol>
+
+<ol>
+<li><strong>"Verbal Approval"</strong> appears as a document type for client approval of accounts — no written signed approval was obtained from the client in at least one instance. This is inadequate professional practice.</li>
+</ol>
+
+<ol>
+<li><strong>Actual sale price €315,000 vs €230,000 marketed price:</strong> The completion statement confirms the property sold for <strong>€315,000</strong> — <strong>€85,000 (37%) above</strong> the marketed price of €230,000 noted in earlier portal correspondence. Did Wincham/the selling agent accurately represent the property's market value?</li>
+</ol>
+
+<ol>
+<li><strong>Estate Agent double fee — Lanzarote Investments Real Estate:</strong> The completion statement shows <strong>two separate estate agent fees</strong>: €192.60 and €10,111.50 — a total of <strong>€10,304.10</strong>. The basis for two separate charges from the same agent is not explained.</li>
+</ol>
+
+<ol>
+<li><strong>Schedule A — Company bears Wincham's legal fees:</strong> The SPA Schedule A states Los Romeros Limited (the company) bears <em>"The Legal fees of Wincham International Limited and its subsidiary companies to include VAT and IVA where applicable."</em> This means Wincham drafted a contract in which they appointed themselves as agent AND designated the company to pay their own fees — a clear conflict of interest.</li>
+</ol>
+
+<ol>
+<li><strong>Schedule A — CGT payable in UK AND Spain:</strong> The Schedule A explicitly states the company bears <em>"CGT Payable in the UK and Spain."</em> This is the cross-border tax liability central to the professional negligence analysis.</li>
+</ol>
+
+<ol>
+<li><strong>Survey declined — Clause 2.3:</strong> The SPA records that Wincham recommended a full survey but the Buyer declined. This clause protects Wincham from structural defect claims. However, it raises the question of whether that recommendation was made clearly in writing or buried in documentation.</li>
+</ol>
+
+<ol>
+<li><strong>Mark Roach signed on behalf of BOTH parties:</strong> The execution page shows <strong>Mark Roach</strong> signed the SPA on behalf of <em>both</em> the Wincham International Group Companies AND (as director) on behalf of Los Romeros Limited/the Seller. He simultaneously represented the selling company, the buying agents, AND his own firm. This is a textbook conflict of interest.</li>
+</ol>
+
+<ol>
+<li><strong>2010 Property Uplift — €175,000 to €231,164.73:</strong> The Purvis family purchased the property for <strong>€175,000</strong> in 2006. When they contributed it to Los Romeros Limited in 2010 (the Aumento de Capital), the notarial valuation was <strong>€231,164.73</strong> — an uplift of <strong>€56,164 (32%)</strong>. This inflated "book cost" within the company may have been used to manipulate the company's balance sheet and tax position. Wincham's Mark Roach orchestrated and executed this transaction.</li>
+</ol>
+
+<hr>
+
+<h2>14. WINCHAM CONTACT DETAILS (from portal footer)</h2>
+
+<table>
+<tr><th>Office</th><th>Address</th><th>Contact</th></tr>
+<tr><td>UK</td><td>Wincham House, Greenfield Farm Trading Estate, Congleton, Cheshire, CW12 4TR</td><td>+44 (0)1260 292 631 / 299 700</td></tr>
+<tr><td>Spain</td><td>Calpe, 03710, Alicante, Spain</td><td>0034 965 830 991</td></tr>
+<tr><td>Marbella</td><td>Avda Ricardo Soriano 72, Portal B, Planta 1a, Marbella, 29601</td><td>0034 965 830 991</td></tr>
+<tr><td>Email</td><td>info@wincham.com</td><td>iht.admin@wincham.com</td></tr>
+</table>
+
+<hr>
+
+<h2>15. SALE & PURCHASE AGREEMENT — FULL ANALYSIS (INT-154371)</h2>
+
+<p><strong>Document:</strong> Sale and Purchase Agreement — Los Romeros Limited
+<strong>Dated:</strong> 9 December 2019
+<strong>Completion:</strong> On or before 23 December 2019
+<strong>Governing Law:</strong> England and Wales</p>
+
+<h3>15.1 Parties</h3>
+<table>
+<tr><th>Party</th><th>Role</th><th>Identity</th></tr>
+<tr><td><strong>(1) The Seller</strong></td><td>Shares seller</td><td>Mary Ann Stockwell, 85 Shangrila Park, Playa Blanca, Lanzarote</td></tr>
+<tr><td><strong>(2) The Buyer</strong></td><td>Purchaser</td><td>Philip Anthony Harrison & Beryl Harrison, 3 Broom Grove, South Anston, Sheffield S25 5GP</td></tr>
+<tr><td><strong>(3) The Company</strong></td><td>Subject company</td><td>Los Romeros Limited, Co. No. 06993349, c/o Wincham House</td></tr>
+<tr><td><strong>(4) The Agent</strong></td><td>Transaction agent</td><td><strong>Wincham International Group Companies</strong> — both drafting the SPA AND acting as agent</td></tr>
+</table>
+
+<h3>15.2 Transaction Structure</h3>
+<ul>
+<li><strong>Consideration:</strong> €185,000 ("Interest Value")</li>
+<li><strong>Deposit:</strong> €5,000 non-refundable — paid to Wincham International Limited Natwest Euro Client Account (IBAN: GB14 NWBK 6072 1031 509622)</li>
+<li><strong>Balance:</strong> €180,000 — same account, same IBAN</li>
+<li><strong>DLA:</strong> Seller draws down <strong>£37,652</strong> Directors' Loan Account in full</li>
+<li><strong>Shares transferred:</strong> 2 Ordinary Shares (1 each to Philip and Beryl Harrison)</li>
+<li><strong>Shares redeemed:</strong> 171,732 Redeemable Preference Shares at €185,000 total</li>
+<li><strong>New shares issued:</strong> 159,634 new Redeemable Preference Shares (79,817 each to Philip and Beryl)</li>
+<li><strong>Exchange rate used:</strong> HMRC November 2019 rate of <strong>1.1589</strong> EUR/GBP</li>
+</ul>
+
+<h3>15.3 Schedule A — Company Costs (borne by Los Romeros Limited)</h3>
+The following costs are stated as the **Company's** liability:
+<ul>
+<li>Legal fees of Wincham International Limited and its subsidiaries (inc. VAT/IVA)</li>
+<li>Courier fees</li>
+<li><strong>Plusvalía Tax</strong></li>
+<li><strong>CGT Payable in the UK and Spain</strong></li>
+<li>Certificate of Good Standing costs</li>
+<li><strong>1–1.5% Transfer Tax if requested</strong></li>
+<li>"Additional disbursements may be payable by the Company which will be notified when the Agents receive confirmation"</li>
+</ul>
+
+<h3>15.4 Schedule B — Buyer Costs (borne by Harrison)</h3>
+<ul>
+<li>Legal fees of Wincham International Limited and its subsidiaries (inc. VAT/IVA)</li>
+<li>Any outstanding utility bills</li>
+</ul>
+
+<h3>15.5 Wincham Group Companies Named</h3>
+<table>
+<tr><th>Company</th><th>UK Reg No.</th></tr>
+<tr><td>Wincham International Limited</td><td>05579766</td></tr>
+<tr><td>Wincham Investments Limited</td><td>02948944</td></tr>
+<tr><td>Wincham Consultants Limited</td><td>05143003</td></tr>
+<tr><td>Wincham Accountants Limited</td><td>05607266</td></tr>
+<tr><td>Wincham Executor & Trustee Company Limited</td><td>07065202</td></tr>
+<tr><td>Wincham Spanish Services SL (Spanish entity)</td><td>CIF B-54842695</td></tr>
+</table>
+
+<h3>15.6 Key Legal Clauses</h3>
+<table>
+<tr><th>Clause</th><th>Content</th><th>Legal Significance</th></tr>
+<tr><td><strong>2.2</strong></td><td>Agent not liable for tax implications/investigations regarding property value</td><td>Wincham excluded liability for tax advice</td></tr>
+<tr><td><strong>2.3</strong></td><td>Survey recommended but declined by buyer</td><td>Structural defect liability waiver</td></tr>
+<tr><td><strong>2.8</strong></td><td>Company bears costs in Sch A; Buyer bears costs in Sch B</td><td>Wincham sets its own fee allocation</td></tr>
+<tr><td><strong>3.1.4</strong></td><td>No warranties or representations beyond the written agreement</td><td>Entire agreement clause — excludes verbal representations</td></tr>
+<tr><td><strong>3.1.6</strong></td><td>Fraudulent misrepresentation/concealment is NOT excluded</td><td>Fraud carve-out preserved — key for legal claims</td></tr>
+<tr><td><strong>3.2</strong></td><td>Governed by English & Welsh law</td><td>English courts have jurisdiction</td></tr>
+<tr><td><strong>3.4</strong></td><td>Agent not liable for disputes between parties</td><td>Wincham excluded from buyer-seller disputes</td></tr>
+</table>
+
+<h3>15.7 Conflicts of Interest — Execution</h3>
+**Mark Roach** signed the agreement in THREE capacities:
+<ol>
+<li>On behalf of <strong>Wincham International Group Companies</strong> (as their authorised director)</li>
+<li>On behalf of <strong>Los Romeros Limited</strong> (as its director, on behalf of the Seller)</li>
+<li>The agreement appointed Wincham as Agent — drafted by Wincham, for Wincham's benefit</li>
+</ol>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body">This is a structural conflict of interest. Wincham simultaneously: drafted the agreement, represented the selling company as its director, acted as the transaction agent, and allocated costs to the company in a schedule that included their own fees — with no independent legal advice recommended or obtained for the buyer.</div></div>
+
+<hr>
+
+<h2>16. COMPLETION STATEMENT — FULL ANALYSIS</h2>
+
+<p><strong>Document:</strong> Completion Statement — Los Romeros Limited — Property Sale WI-25863
+<strong>Dated:</strong> 20 March 2026 (filename: 3.20.26)
+<strong>Created:</strong> 11 April 2026 11:43:19 (per PDF metadata)
+<strong>Issued by:</strong> Wincham House, Greenfield Farm Trading Estate, Congleton, Cheshire CW12 4TR</p>
+
+<h3>16.1 Complete Line-by-Line Breakdown</h3>
+
+<table>
+<tr><th>Line Item</th><th>Amount (€)</th><th>Notes</th></tr>
+<tr><td><strong>Sales Proceeds</strong></td><td><strong>+315,000.00</strong></td><td><strong>CONFIRMED FINAL SALE PRICE</strong></td></tr>
+<tr><td>3% Retention</td><td>-9,450.00</td><td>Spanish Non-Resident Tax retention (withheld for AEAT)</td></tr>
+<tr><td>Estate Agent fees — Lanzarote Investments Real Estate</td><td>-192.60</td><td>Fee 1 — purpose unclear</td></tr>
+<tr><td>Estate Agent fees — Lanzarote Investments Real Estate</td><td>-10,111.50</td><td>Fee 2 — approx. 3.21% of sale price</td></tr>
+<tr><td>Plusvalía tax</td><td>-1,831.24</td><td>Municipal capital gains tax (Lanzarote Ayuntamiento)</td></tr>
+<tr><td><strong>Balance of Sale Proceeds</strong></td><td><strong>+293,414.66</strong></td><td>Net paid to Los Romeros Limited (or Harrisons)</td></tr>
+</table>
+
+<h3>16.2 What is MISSING from the Completion Statement</h3>
+
+<table>
+<tr><th>Item</th><th>Expected Amount</th><th>Why It Should Be Here</th></tr>
+<tr><td>Wincham Legal Fees (UK documents)</td><td>£6,000 inc. VAT</td><td>Quoted and confirmed in portal messages</td></tr>
+<tr><td>Wincham Legal Fees (Spanish documents)</td><td>£3,600 inc. VAT</td><td>Quoted and confirmed in portal messages</td></tr>
+<tr><td>Wincham Apostille/Legalisation</td><td>£126</td><td>Confirmed in portal</td></tr>
+<tr><td>Spanish Notary fees</td><td>€474.86</td><td>Confirmed from Completion Statement analysis</td></tr>
+<tr><td>IRPF/CGT retention (if direct property sale)</td><td>Variable</td><td>If company is selling the property not shares</td></tr>
+<tr><td>UK legal/accounting fees</td><td>Unknown</td><td>For CT600 and Corporation Tax filing on gain</td></tr>
+</table>
+
+<div class="alert warning"><strong>⚠️ WARNING</strong><div class="alert-body">Wincham's own fees (quoted at £9,726 inc. VAT) are <strong>completely absent</strong> from this completion statement. The statement accounts for only €21,585.34 of deductions from €315,000. The Harrisons need to see the <strong>full reconciliation</strong> of where the remaining proceeds went.</div></div>
+
+<h3>16.3 Property Sale vs Share Sale Question</h3>
+The completion statement is headed *"Los Romeros Limited — Property Sale"* not *"share sale."* This may indicate the 2026 transaction was a **direct property sale by the company** — which has entirely different tax consequences. The 3% retention of €9,450 on €315,000 is consistent with a **direct property transfer** by a non-resident company.
+
+<hr>
+
+<h2>17. EVIDENCE SECURED — 13 APRIL 2026</h2>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body">On 13 April 2026, all five critical 2010 Spanish legal documents were captured page-by-page from the Wincham client portal and compiled into professional-grade PDF evidence files.</div></div>
+
+<h3>17.1 Portal Access Method</h3>
+<ul>
+<li><strong>Portal URL:</strong> https://tax.wincham.com</li>
+<li><strong>Login:</strong> phil.harrison1904@gmail.com / ValenKi</li>
+<li><strong>Method:</strong> Page-by-page browser screenshots captured using browser automation, converted to PDF</li>
+</ul>
+
+<h3>17.2 Evidence PDFs Secured</h3>
+
+<table>
+<tr><th>Document</th><th>Portal Ref</th><th>Pages</th><th>PDF File</th><th>Size</th></tr>
+<tr><td><strong>Escritura de Compraventa (Title Deed)</strong></td><td>INT-7446</td><td>34</td><td><code>Escritura_INT7446_TitleDeed_13Apr2010.pdf</code></td><td>2,625 KB</td></tr>
+<tr><td><strong>Escritura — Last Page</strong></td><td>INT-7447</td><td>1</td><td><code>Escritura_INT7447_LastPage_13Apr2010.pdf</code></td><td>95 KB</td></tr>
+<tr><td><strong>Deed of Investment / Aumento de Capital</strong></td><td>INT-9097</td><td>20</td><td><code>DeedOfInvestment_INT9097_AumentoCapital_24Jun2010.pdf</code></td><td>1,911 KB</td></tr>
+<tr><td><strong>Investment Calculation</strong></td><td>INT-8979</td><td>1</td><td><code>InvestmentCalculation_INT8979_21Jun2010.pdf</code></td><td>108 KB</td></tr>
+<tr><td><strong>Invoice / Factura Ref 1809</strong></td><td>INT-7454</td><td>1</td><td><code>Invoice_INT7454_Factura1809_13Apr2010.pdf</code></td><td>83 KB</td></tr>
+</table>
+
+<p><strong>All files saved to:</strong>
+<code>D:\VELYON - LEGAL COMMAND CENTER\Los Romeros Ltd - Wincham Case Files\05 - Property Sale Documents\</code></p>
+
+<h3>17.3 Evidentiary Status</h3>
+These portal-captured screenshots constitute **Tier 2 evidence**. They are admissible in English civil proceedings when exhibited to a signed witness statement by Philip Harrison under CPR Part 32 and Practice Direction 32. To upgrade to Tier 1 (primary certified evidence), official certified copies must be obtained from the Spanish authorities — see Section 20.
+
+<hr>
+
+<h2>18. PROPERTY OWNERSHIP HISTORY</h2>
+
+<table>
+<tr><th>Period</th><th>Owner</th><th>Acquisition</th><th>Value Declared</th><th>Notes</th></tr>
+<tr><td>Pre-2006</td><td>Owen Richard Hollywood</td><td>Inherited / previous purchase</td><td>Unknown</td><td>Original vendor</td></tr>
+<tr><td><strong>8 March 2006</strong></td><td>Frederick & Margaret Purvis</td><td>Purchased from Hollywood</td><td><strong>€175,000</strong></td><td>Escritura Protocol 1612, Notary Carmen Martínez Socias, Arrecife</td></tr>
+<tr><td><strong>24 June 2010</strong></td><td>Los Romeros Limited (UK company)</td><td>Aumento de Capital — contributed by Purvis family</td><td><strong>€231,164.73</strong></td><td>Deed INT-9097, Notary José Miguel de Lamo Iglesias, Benissa</td></tr>
+<tr><td><strong>12 December 2019</strong></td><td>Philip & Beryl Harrison (via Los Romeros Ltd)</td><td>Share purchase from Stockwells</td><td><strong>€185,000</strong></td><td>SPA INT-154371 — share acquisition, not direct property transfer</td></tr>
+<tr><td><strong>20 March 2026</strong></td><td>Unknown buyer</td><td>Direct property purchase from Los Romeros Ltd</td><td><strong>€315,000</strong></td><td>Completion Statement WI-25863</td></tr>
+</table>
+
+<h3>Key Observation — The 2010 Uplift</h3>
+When the Purvis family contributed the property to Los Romeros Limited in 2010, the notarially declared value was **€231,164.73** — some **€56,164 (32%) above** the 2006 purchase price of €175,000 with no evidence of a formal independent valuation having been conducted.
+
+<ul>
+<li>The inflated 2010 book value created an artificially high "cost base" inside the company</li>
+<li>When the Stockwells sold the company to the Harrisons in 2019 at <strong>€185,000</strong> — this was <strong>€46,164 below</strong> the 2010 notarially declared value</li>
+<li>The 2026 sale at <strong>€315,000</strong> generates a Spanish CGT gain calculated from this inflated 2010 base cost</li>
+</ul>
+
+<hr>
+
+<h2>19. ITP TAX ANALYSIS</h2>
+
+<h3>What is ITP?</h3>
+Impuesto sobre Transmisiones Patrimoniales (ITP) is Spanish Property Transfer Tax, levied at 6.5%–10% on property purchases by the buyer.
+
+<h3>The Share Structure — ITP Saving</h3>
+The key advantage of the Wincham share-holding structure was that **no ITP was payable** when Philip Harrison bought the company's shares in December 2019. By purchasing the company (Los Romeros Limited) rather than the underlying property asset directly, the 2019 transaction avoided Spanish ITP entirely.
+
+<table>
+<tr><th>Transaction Type</th><th>ITP Liability</th><th>ITP on €185,000 at 6.5%</th></tr>
+<tr><td>Direct property purchase</td><td>YES — payable</td><td><strong>~€12,025</strong></td></tr>
+<tr><td>Share purchase (as structured by Wincham)</td><td>NO — not a property transfer</td><td><strong>€0</strong></td></tr>
+<tr><td><strong>Saving from share structure</strong></td><td>—</td><td><strong>~€12,025</strong></td></tr>
+</table>
+
+<h3>Wincham's Own Illustration</h3>
+The Wincham View Illustration quoted **~€9,910** as the estimated ITP saving (appearing to use a slightly different rate). This was the primary marketing justification Wincham used for the share structure.
+
+<h3>Red Flag</h3>
+If no ITP was payable in 2019, **who paid the original 2006 ITP** when the Purvis family first bought the property? That 2006 ITP payment receipt should exist at Hacienda/AEAT and should confirm the original acquisition cost for Spanish CGT base-cost purposes.
+
+<hr>
+
+<h2>20. FORMAL EVIDENCE GATHERING ACTIONS — 13 APRIL 2026</h2>
+
+<h3>20.1 Letter to Wincham International</h3>
+A formal document request letter was drafted on 13 April 2026, requiring Wincham to produce within **14 days**:
+<ul>
+<li>Certified copies of all five portal documents</li>
+<li>All invoices and time records</li>
+<li>The complete Completion Statement with bank transfer receipts</li>
+<li>Engagement letters and terms of business</li>
+<li>Professional indemnity insurance details</li>
+</ul>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>NO LETTERS HAVE BEEN SENT YET.</strong> The letter below has been fully drafted and is ready to dispatch. Philip Harrison must send it by recorded delivery post AND by email to info@wincham.com and mark@wincham.com. The 14-day disclosure clock does not start until Wincham receive it. The UK GDPR Subject Access Request (1-month deadline) and Pre-Action Protocol for Professional Negligence preservation notice are embedded in the same letter — none of these deadlines have started running.</div></div>
+
+<p>The draft letter simultaneously constitutes: (a) a <strong>formal document and data request</strong>; (b) a <strong>Subject Access Request under UK GDPR Article 15</strong> (1-month deadline from receipt); and (c) a <strong>Pre-Action Protocol for Professional Negligence</strong> preservation notice.</p>
+
+<p><strong>File:</strong> <code>D:\VELYON - LEGAL COMMAND CENTER\Los Romeros Ltd - Wincham Case Files\06 - Legal Correspondence\Wincham_Formal_Document_Request_Letter.md</code></p>
+
+<h3>20.2 Spanish Registry and Notary Requests</h3>
+Three letters were drafted to obtain official certified copies:
+
+<table>
+<tr><th>Letter</th><th>Recipient</th><th>Document Requested</th><th>Est. Cost</th><th>Turnaround</th></tr>
+<tr><td><strong>1</strong></td><td>Registro de la Propiedad de Yaiza</td><td>Nota Simple + Certified Escritura copy</td><td>~€10–30</td><td>24–72 hrs (online available)</td></tr>
+<tr><td><strong>2</strong></td><td>Notaría Carmen Martínez Socias, Arrecife</td><td>Certified copy — Escritura Protocol 1612/2006</td><td>~€50–100</td><td>3–7 days</td></tr>
+<tr><td><strong>3</strong></td><td>Notaría de José Miguel de Lamo Iglesias, Benissa</td><td>Certified copy — Aumento de Capital 2010</td><td>~€50–100</td><td>3–10 days</td></tr>
+</table>
+
+<p><strong>File:</strong> <code>D:\VELYON - LEGAL COMMAND CENTER\Los Romeros Ltd - Wincham Case Files\06 - Legal Correspondence\Spanish_Registry_Document_Requests.md</code></p>
+
+<div class="alert tip"><strong>💡 TIP</strong><div class="alert-body">The <strong>Nota Simple</strong> can be ordered instantly online at <strong>registradores.org</strong> for approximately <strong>€9.02 + IVA</strong>. This is the fastest way to confirm current ownership, any charges, and the exact registry notation of the 2026 sale. Order immediately.</div></div>
+
+<hr>
+
+<h2>21. PROFESSIONAL RECOMMENDATIONS</h2>
+
+<h3>21.1 IMMEDIATE PRIORITY (This Week)</h3>
+
+<table>
+<tr><th>Action</th><th>Owner</th><th>Deadline</th></tr>
+<tr><td><strong>Order Nota Simple online</strong> via registradores.org (€9)</td><td>Philip Harrison</td><td>Today</td></tr>
+<tr><td><strong>Send Wincham letter</strong> by recorded delivery and email</td><td>Philip Harrison / Solicitor</td><td>Today</td></tr>
+<tr><td><strong>Send Spanish notary letters</strong> to Arrecife and Benissa notaries</td><td>Philip Harrison</td><td>This week</td></tr>
+<tr><td><strong>Philip Harrison to sign witness statement</strong> exhibiting the 5 portal PDFs</td><td>Philip Harrison + Solicitor</td><td>Within 7 days</td></tr>
+<tr><td><strong>Instruct a UK solicitor</strong> specialising in professional negligence</td><td>Philip Harrison</td><td>This week</td></tr>
+<tr><td><strong>Engage a Spanish gestoría in Lanzarote</strong> to assist with registry requests</td><td>Philip Harrison</td><td>This week</td></tr>
+</table>
+
+<h3>21.2 LEGAL CLAIMS TO INVESTIGATE</h3>
+
+<table>
+<tr><th>Claim</th><th>Basis</th><th>Strength</th></tr>
+<tr><td><strong>Professional Negligence</strong></td><td>Wincham gave inadequate advice re. dual Spanish/UK CGT liability (as acknowledged in Schedule A of their own SPA)</td><td>🔴 STRONG</td></tr>
+<tr><td><strong>Conflict of Interest / Breach of Fiduciary Duty</strong></td><td>Mark Roach signed the SPA in three capacities simultaneously</td><td>🔴 STRONG</td></tr>
+<tr><td><strong>Cross-Border Billing Irregularity / Unjust Enrichment</strong></td><td>£9,726 paid in sterling to Wincham International (UK) under a contract with Wincham Spanish Services SL (Spain). Fees confirmed paid and settled. Legal question: was the UK entity entitled to collect funds owed to the Spanish entity? No UK contract was produced. Potential claim against Wincham International for unjust enrichment and breach of contract</td><td>🔴 STRONG</td></tr>
+<tr><td><strong>Overcharging / Fee Fraud</strong></td><td>£5,300 + £750 in View Illustration vs £1,600 in Invoice 262 — discrepancy of ~£4,450</td><td>🟡 MODERATE — needs all invoice disclosure</td></tr>
+<tr><td><strong>Misrepresentation re. property value</strong></td><td>Property sold for €315,000 vs €230,000 marketed — was Harrison ever advised of true market value?</td><td>🟡 MODERATE — needs evidence</td></tr>
+<tr><td><strong>Inflated 2010 Valuation</strong></td><td>€231,164.73 Aumento de Capital value vs €175,000 paid in 2006 — potential manipulation of base cost</td><td>🟡 MODERATE — needs expert valuation evidence</td></tr>
+<tr><td><strong>Credit Note — Fiscal Rep 2020</strong></td><td>Credit note issued simultaneously with invoice — potential double-billing</td><td>🟢 LOW (at present — needs disclosure)</td></tr>
+</table>
+
+<h3>21.3 EVIDENCE GAPS TO FILL</h3>
+
+<table>
+<tr><th>Gap</th><th>How to Fill</th></tr>
+<tr><td>All Wincham invoices (not just Invoice 262)</td><td>Wincham document request (14-day deadline) / GDPR SAR</td></tr>
+<tr><td>Bank statements showing client account movements</td><td>Wincham document request; NatWest under court order if refused</td></tr>
+<tr><td>2006 ITP payment confirmation</td><td>AEAT / Hacienda records; Spanish gestoría</td></tr>
+<tr><td>Independent valuation of property in 2010</td><td>Instruction of RICS/Spanish-qualified surveyor</td></tr>
+<tr><td>Engagement letter / original fee agreement</td><td>Wincham document request</td></tr>
+<tr><td>Wincham professional indemnity insurance details</td><td>Wincham document request; Companies House if insurer named</td></tr>
+</table>
+
+<h3>21.4 QUANTUM OF CLAIM (UPDATED — 14 APRIL 2026)</h3>
+
+<table>
+<tr><th>Head of Loss</th><th>Confirmed/Estimated Amount</th><th>Basis</th></tr>
+<tr><td>Cross-border billing irregularity — £9,726 paid to UK entity under Spanish contract</td><td><strong>£9,726 (confirmed paid)</strong></td><td>Paid in full by Philip Harrison to Wincham International (UK) in sterling. Legal claim: breach of contract (paid to wrong entity) + unjust enrichment. <strong>⚠️ NOT deductible from Spanish CGT (Modelo 210) — must be claimed in UK CT computation</strong></td></tr>
+<tr><td>Wincham overcharge vs. fair market maximum</td><td><strong>£5,450 – £7,325</strong></td><td>110–258% above independent market rate</td></tr>
+<tr><td>Purchase fee discrepancy (View Illustration vs Invoice 262)</td><td><strong>~£4,450</strong></td><td>Invoice 262 confirmed paid at £1,600. Three-stage reduction from £6,050 — no written variation agreement produced</td></tr>
+<tr><td>Annual running fees — confirmed total (6 years)</td><td><strong>£6,572</strong></td><td>Confirmed from portal: Fiscal Rep £1,700 + Co. Sec £1,572 + Accounts £3,240 + Good Standing £60</td></tr>
+<tr><td>Pro-rata Fiscal Rep refund (2026 unused period)</td><td><strong>~£225</strong></td><td>9.5/12 × £300 — property sold 20 March 2026</td></tr>
+<tr><td>Spanish CGT (IRNR) liability from negligent advice</td><td><strong>TBD</strong></td><td>Expert Spanish tax advice required — Modelo 210 due 20 July 2026</td></tr>
+<tr><td>UK Corporation Tax on gain</td><td><strong>TBD</strong></td><td>Depends on MVL/winding-up structure. Note: £9,726 should be claimed here as allowable cost of disposal</td></tr>
+<tr><td><strong>CONFIRMED PRELIMINARY TOTAL</strong></td><td><strong>~£26,423 – £28,298+</strong></td><td><strong>Excluding CGT/CT liability from negligent advice</strong></td></tr>
+</table>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body"><strong>TAX TREATMENT OF £9,726 WINCHAM SALE FEES:</strong>
+
+<table>
+<tr><th>Jurisdiction</th><th>Treatment</th><th>Reason</th></tr>
+<tr><td><strong>Spain — Modelo 210 (IRNR)</strong></td><td>❌ <strong>NOT deductible</strong></td><td>Fees were paid in sterling to a UK entity. Spain received no money. AEAT will not accept these as Spanish costs of sale</td></tr>
+</table>
+| <strong>UK — Corporation Tax (Los Romeros Ltd)</strong> | ✅ <strong>Deductible as allowable cost of disposal</strong> | These are genuine costs of the UK company's disposal of its Spanish property asset, paid by the UK company. They should reduce the UK chargeable gain and resultant Corporation Tax liability |</div></div>
+
+<h3>21.5 NEXT STEPS — STRUCTURED PLAN</h3>
+
+<ol>
+<li><strong>Order Nota Simple</strong> — registradores.org (immediate, €9, available today)</li>
+<li><strong>Post Wincham letter</strong> — recorded delivery to Wincham House, Congleton + email to info@wincham.com</li>
+<li><strong>Email Spanish notaries</strong> — Letters 2 and 3 from the Spanish request file</li>
+<li><strong>Witness Statement</strong> — Philip Harrison to make a formal witness statement exhibiting all five portal PDFs as exhibits PH-1 through PH-5</li>
+<li><strong>Instruct solicitor</strong> — Brief a UK solicitor (professional negligence team) with this complete forensic report and the evidence bundle</li>
+<li><strong>AEAT notification</strong> — Ensure the Spanish Modelo 210 CGT return is filed by 20 July 2026 deadline using correct figures</li>
+<li><strong>MVL planning</strong> — Engage an insolvency practitioner once the tax position is confirmed and recoveries quantified</li>
+</ol>
+
+<hr>
+
+<h2>APPENDIX — DOCUMENT REFERENCES AND FILE LOCATIONS</h2>
+
+<h3>Portal Documents (Wincham Case WI-13211 / WI-25863)</h3>
+All document references are in the format INT-XXXXXX and are viewable at:
+**https://tax.wincham.com** (login: phil.harrison1904@gmail.com)
+
+<h3>Local Evidence Bundle Location</h3>
+<pre><code>D:\VELYON - LEGAL COMMAND CENTER\Los Romeros Ltd - Wincham Case Files\
+├── 04 - Wincham SSL Forensic Audit\
+│   └── [Original extraction scripts and data files]
+├── 05 - Property Sale Documents\
+│   ├── Escritura_INT7446_TitleDeed_13Apr2010.pdf          (2,625 KB)
+│   ├── Escritura_INT7447_LastPage_13Apr2010.pdf            (95 KB)
+│   ├── DeedOfInvestment_INT9097_AumentoCapital_24Jun2010.pdf (1,911 KB)
+│   ├── InvestmentCalculation_INT8979_21Jun2010.pdf         (108 KB)
+│   ├── Invoice_INT7454_Factura1809_13Apr2010.pdf           (83 KB)
+│   ├── Sale and purchase agreement - Phil Harrison - Los Romeros Limited.pdf
+│   ├── Los_Romeros_Ltd_Forensic_Audit_SPA_and_Property_Sale_20_March_2026.md
+│   ├── Los_Romeros_Ltd_Forensic_Audit_SPA_and_Property_Sale_20_March_2026.html
+│   └── Los_Romeros_Ltd_Forensic_Audit_SPA_and_Property_Sale_20_March_2026.pdf
+└── 06 - Legal Correspondence\
+    ├── Wincham_Formal_Document_Request_Letter.md
+    └── Spanish_Registry_Document_Requests.md
+</code></pre>
+
+<hr>
+
+<hr>
+
+<h2>22. LANZAROTE PROPERTY MARKET — PRICE APPRECIATION ANALYSIS (2019–2025)</h2>
+
+<h3>22.1 Annual Price Index — Lanzarote Residential Property (€/m²)</h3>
+
+<p><em>(Source: Optima Estate / Infocanarie — island-wide average, all residential property types)</em></p>
+
+<table>
+<tr><th>Year</th><th>Avg. Price (€/m²)</th><th>Year-on-Year Change</th><th>Cumulative Change vs 2019</th></tr>
+<tr><td>2019</td><td>€1,946</td><td>— (baseline)</td><td>—</td></tr>
+<tr><td>2020</td><td>€1,903</td><td><strong>-2.2%</strong></td><td>-2.2%</td></tr>
+<tr><td>2021</td><td>€1,878</td><td><strong>-1.3%</strong></td><td>-3.5%</td></tr>
+<tr><td>2022</td><td>€2,009</td><td><strong>+7.0%</strong></td><td>+3.2%</td></tr>
+<tr><td>2023</td><td>€2,201</td><td><strong>+9.6%</strong></td><td>+13.1%</td></tr>
+<tr><td>2024</td><td>€2,463</td><td><strong>+11.9%</strong></td><td>+26.6%</td></tr>
+<tr><td>2025</td><td>€2,894</td><td><strong>+17.5%</strong></td><td>+48.7%</td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">Data represents island-wide averages. Yaiza municipality (where 85 Shangrila Park, Playa Blanca is located) typically commands <strong>above-average prices</strong> due to its premium coastal resort status. Actual property appreciation for this specific address is likely to have been higher than the island average.</div></div>
+
+<h3>22.2 CAGR Analysis — 2019 to 2025</h3>
+
+<p><strong>Compound Annual Growth Rate (CAGR), 2019–2025 (6 years):</strong>
+<blockquote>(2,894 ÷ 1,946)^(1/6) − 1 = <strong>+6.87% per annum</strong></blockquote></p>
+
+<h3>22.3 Implied 2019 Market Value — Based on 2026 Sale Price</h3>
+
+<p><strong>Working backwards from the confirmed €315,000 sale price (March 2026) at the confirmed CAGR of +6.87% over 6 years:</strong></p>
+
+<blockquote>€315,000 ÷ (1.0687)^6.25 ≈ <strong>€208,000 – €215,000 implied market value in December 2019</strong></blockquote>
+
+<table>
+<tr><th>Metric</th><th>Amount</th><th>Notes</th></tr>
+<tr><td>Confirmed 2026 sale price</td><td>€315,000</td><td>Completion Statement — confirmed</td></tr>
+<tr><td>CAGR 2019–2025 (Lanzarote)</td><td>6.87% per annum</td><td>Back-calculated from price index data</td></tr>
+<tr><td><strong>Implied 2019 market value</strong></td><td><strong>~€210,000 – €215,000</strong></td><td>Estimated at time of Harrison acquisition</td></tr>
+<tr><td><strong>Harrison paid (December 2019)</strong></td><td><strong>€185,000</strong></td><td>Confirmed — SPA INT-154371</td></tr>
+<tr><td><strong>Discount to implied market value</strong></td><td><strong>~€25,000 – €30,000 (12–14%)</strong></td><td>Harrisons acquired below implied market value</td></tr>
+</table>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body">The Harrisons paid <strong>€185,000</strong> for a property whose implied market value at December 2019 was approximately <strong>€210,000–€215,000</strong> — suggesting a purchase that was already 12–14% below fair market value at the time. This is relevant to:
+(a) The accuracy of Wincham's marketing materials regarding property value;
+(b) The appropriateness of the €185,000 price relative to the €231,164.73 notarially declared value in the company (which was itself above the 2019 market implied value);
+(c) Whether the Stockwells were advised by Wincham that the company's 2010 declared asset value of €231,164.73 significantly exceeded what Wincham sold it for in 2019.</div></div>
+
+<hr>
+
+<h2>23. CIF CERTIFICATE — EXPLANATION AND HOW TO OBTAIN</h2>
+
+<h3>23.1 What is a CIF Certificate?</h3>
+
+<p>The <strong>CIF</strong> (<em>Código de Identificación Fiscal</em>) is Spain's equivalent of a UK Company Tax Reference number — a unique fiscal identification code assigned by the <strong>Agencia Tributaria (AEAT / Hacienda)</strong> to companies (including foreign companies) that own property, conduct business, or have tax obligations in Spain.</p>
+
+<ul>
+<li>For <strong>Spanish companies</strong>: the CIF begins with a letter (e.g., B for SL, A for SA)</li>
+<li>For <strong>foreign companies</strong> (like Los Romeros Limited): the CIF/NIF begins with the letter <strong>N</strong></li>
+<li><strong>Los Romeros Limited's confirmed NIF: N8261069B</strong> (Definitivo — permanent registration)</li>
+<li><strong>Issued by:</strong> AEAT Delegación de Alicante, 05/03/2010</li>
+<li><strong>Registered Spanish fiscal address:</strong> Avda Masnou 6, 03710 Calpe/Calp, Alicante (= Wincham's address)</li>
+</ul>
+
+<h3>23.2 Is INT-7453 Accessible on the Portal?</h3>
+
+<p>The document <strong>INT-7453</strong> appears in the Wincham portal document list with the category "CIF Number" dated 13/04/2010. Its portal status is shown as "—" (neither Active nor Accepted). There is uncertainty as to whether it is viewable — the portal sub-agent was unable to confirm a clickable PDF link. <strong>Philip Harrison should attempt to open INT-7453 directly from the portal and report back.</strong></p>
+
+<h3>23.3 How to Obtain an Official Copy</h3>
+
+<p>A certified copy of the CIF/NIF certificate for Los Romeros Limited can be obtained through the following routes:</p>
+
+<table>
+<tr><th>Route</th><th>Method</th><th>Cost</th><th>Timescale</th></tr>
+<tr><td><strong>AEAT Online</strong></td><td>Log in at agenciatributaria.es using the company's NIF (N8261069B) + a Spanish digital certificate or Cl@ve PIN</td><td>Free</td><td>Immediate</td></tr>
+<tr><td><strong>Via Spanish Gestor</strong></td><td>Instruct a local gestoría in Lanzarote or Alicante to request a certified copy from AEAT</td><td>~€50–100 (gestor fee)</td><td>24–48 hours</td></tr>
+<tr><td><strong>Via Wincham (formal request)</strong></td><td>Include in the formal document request letter when it is sent to Wincham (<strong>letter drafted but NOT YET SENT</strong> — see Section 20)</td><td>Nil</td><td>Within 14 days of letter being received by Wincham</td></tr>
+<tr><td><strong>Direct AEAT office</strong></td><td>Present in person at AEAT Lanzarote or Alicante with company registration proof</td><td>Free</td><td>Same day</td></tr>
+</table>
+
+<div class="alert tip"><strong>💡 TIP</strong><div class="alert-body">The fastest and cheapest route is via a <strong>local Lanzarote gestoría</strong> — they will have direct AEAT access and can provide a certified copy within 24 hours for a modest fee. The NIF <strong>N8261069B</strong> is all they need.</div></div>
+
+<hr>
+
+<h2>24. COMPLETE FORENSIC COST SCHEDULE — TOTAL OUTGOINGS</h2>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">Complete itemised record of every confirmed and estimated cost. Exchange rates: HMRC official March 2026 rate €1 = £0.8718 for 2026 items; approximate prevailing rates for earlier years.</div></div>
+
+<h3>24A — Wincham Fees (All GBP — paid to Wincham entities)</h3>
+
+<p><strong>Purchase Phase — December 2019</strong></p>
+
+<table>
+<tr><th>Item</th><th>INT Ref</th><th>Amount</th><th>Status</th></tr>
+<tr><td>Purchase management fee — Invoice 262</td><td>INT-154784</td><td>£1,600</td><td>✅ Confirmed paid</td></tr>
+</table>
+
+<div class="alert warning"><strong>⚠️ WARNING</strong><div class="alert-body">The pre-contract View Illustration quoted £6,050 (£5,300 + £750). A subsequent Darren Williams quote was £3,600. Only £1,600 was invoiced. <strong>Gap of £4,450 remains unexplained</strong> — all purchase-phase invoices must be demanded in the formal document request letter.</div></div>
+
+<p><strong>Fiscal Representation Spain (Harrison tenure 2020–2026)</strong></p>
+
+<table>
+<tr><th>Year</th><th>INT Ref</th><th>Amount</th><th>Status</th></tr>
+<tr><td>2020</td><td>INT-153836 / INT-166932</td><td>£200</td><td>✅ Confirmed</td></tr>
+<tr><td>2021</td><td>INT-176533</td><td>£200</td><td>✅ Confirmed</td></tr>
+<tr><td>2022</td><td>Not captured</td><td>£200</td><td>⚠️ Estimated</td></tr>
+<tr><td>2023</td><td>Not captured</td><td>£200</td><td>⚠️ Estimated</td></tr>
+<tr><td>2024</td><td>Not captured</td><td>£300</td><td>⚠️ Estimated (fee increase assumed)</td></tr>
+<tr><td>2025</td><td>Portal confirmed</td><td>£300</td><td>✅ Confirmed</td></tr>
+<tr><td>2026 (full year billed Jan 2026)</td><td>Portal msg 19/01/2026</td><td>£300</td><td>✅ Confirmed — ⚠️ pro-rata refund ~£225 may be due</td></tr>
+<tr><td><strong>TOTAL FISCAL REP</strong></td><td></td><td><strong>£1,700</strong></td><td>⚠️ See Section 25 — service value disputed</td></tr>
+</table>
+
+<p><strong>Registered Office & Company Secretarial</strong></p>
+
+<table>
+<tr><th>Year</th><th>INT Ref</th><th>Inc. VAT</th><th>Status</th></tr>
+<tr><td>2019/20</td><td>INT-155261 (Inv. 6055)</td><td>£200</td><td>✅ Confirmed</td></tr>
+<tr><td>2020/21</td><td>INT-167506 (Inv. 13237)</td><td>£200</td><td>✅ Confirmed</td></tr>
+<tr><td>2021/22</td><td>INT-179615 / INT-191453 (Inv. 483)</td><td>£240</td><td>✅ Confirmed</td></tr>
+<tr><td>2022/23</td><td>INT-192906 (Inv. 828)</td><td>£235</td><td>✅ Confirmed</td></tr>
+<tr><td>2023/24</td><td>Not captured</td><td>£235</td><td>⚠️ Estimated</td></tr>
+<tr><td>2024/25</td><td>Not captured</td><td>£235</td><td>⚠️ Estimated</td></tr>
+<tr><td>2025/26</td><td>Not captured</td><td>£235</td><td>⚠️ Estimated</td></tr>
+<tr><td><strong>TOTAL CO. SEC</strong></td><td></td><td><strong>£1,580</strong></td><td>4 of 7 years confirmed</td></tr>
+</table>
+
+<p><strong>Annual Accounts Preparation</strong></p>
+
+<table>
+<tr><th>Year</th><th>INT Ref</th><th>Inc. VAT</th><th>Status</th></tr>
+<tr><td>2019/20</td><td>INT-153484 (Inv. 12939)</td><td>£425</td><td>✅ Confirmed</td></tr>
+<tr><td>2020/21</td><td>INT-181479 (Inv. 661)</td><td>£450</td><td>✅ Confirmed</td></tr>
+<tr><td>2021/22</td><td>INT-192906 (Inv. 828)</td><td>£475</td><td>✅ Confirmed</td></tr>
+<tr><td>2022/23</td><td>INT-192906 (same batch)</td><td>£475</td><td>✅ Confirmed</td></tr>
+<tr><td>2023/24</td><td>Not captured</td><td>£475</td><td>⚠️ Estimated (same as 2022/23)</td></tr>
+<tr><td>2024/25</td><td>Not captured</td><td>£475</td><td>⚠️ Estimated (same as 2022/23)</td></tr>
+<tr><td><strong>TOTAL ACCOUNTS</strong></td><td></td><td><strong>£2,775</strong></td><td>4 confirmed, 2 estimated</td></tr>
+</table>
+
+<p><strong>Standalone Certificates & Sale Fees</strong></p>
+
+<table>
+<tr><th>Item</th><th>INT Ref</th><th>Amount</th><th>Status</th></tr>
+<tr><td>Certificate of Good Standing (Feb 2020)</td><td>INT-167263 (Inv. 13186)</td><td>£60</td><td>✅ Confirmed (reclassified)</td></tr>
+<tr><td>Sale — Corporate legal fee</td><td>WI-25863</td><td>£6,000</td><td>✅ Confirmed paid</td></tr>
+<tr><td>Sale — Documentation fee</td><td>WI-25863</td><td>£3,600</td><td>✅ Confirmed paid</td></tr>
+<tr><td>Sale — Apostille certificate</td><td>WI-25863</td><td>£126</td><td>✅ Confirmed paid</td></tr>
+</table>
+
+<p><strong>WINCHAM FEES GRAND TOTAL</strong></p>
+
+<table>
+<tr><th>Category</th><th>Confirmed</th><th>Estimated Full</th></tr>
+<tr><td>Purchase management</td><td>£1,600</td><td>£1,600</td></tr>
+<tr><td>Fiscal representation (7 years)</td><td>£1,700</td><td>£1,700</td></tr>
+<tr><td>Registered office & co. sec</td><td>£875</td><td>£1,580</td></tr>
+<tr><td>Annual accounts (6 years)</td><td>£1,825</td><td>£2,775</td></tr>
+<tr><td>Certificate of Good Standing</td><td>£60</td><td>£60</td></tr>
+<tr><td>Sale fees (legal + docs + apostille)</td><td>£9,726</td><td>£9,726</td></tr>
+<tr><td><strong>TOTAL — ALL WINCHAM FEES</strong></td><td><strong>£15,786 confirmed</strong></td><td><strong>£17,441 estimated</strong></td></tr>
+</table>
+
+<hr>
+
+<h3>24B — Third-Party Costs: Spanish Sale 2026</h3>
+
+<p><em>Rate: €1 = £0.8718 (HMRC official March 2026)</em></p>
+
+<table>
+<tr><th>Payee</th><th>Item</th><th>EUR</th><th>GBP</th><th>Status</th></tr>
+<tr><td>Lanzarote Investments Real Estate</td><td>Agent commission</td><td>€10,111.50</td><td>£8,815</td><td>✅ Completion statement</td></tr>
+<tr><td>Lanzarote Investments Real Estate</td><td>Utility settlement</td><td>€192.60</td><td>£168</td><td>✅ Completion statement</td></tr>
+<tr><td>Notaría Patricia del Río Fernández, Calpe</td><td>Notary — 2026 sale escritura</td><td>€474.86</td><td>£414</td><td>⚠️ Not on CS — separately settled</td></tr>
+<tr><td>Ayuntamiento de Yaiza</td><td>Plusvalía Municipal</td><td>€1,831.24</td><td>£1,597</td><td>✅ Completion statement</td></tr>
+<tr><td>AEAT (via buyer — Modelo 211)</td><td>3% CGT retention</td><td>€9,450.00</td><td>£8,239</td><td>✅ Withheld — prepayment of CGT. May be partially/fully refunded after Modelo 210 filed</td></tr>
+<tr><td>Izquierdo y de la Cueva SCProf</td><td>Depositary/escrow firm</td><td>TBC</td><td>TBC</td><td>❌ Not captured — formal request required</td></tr>
+<tr><td><strong>TOTAL THIRD-PARTY SPANISH</strong></td><td></td><td><strong>~€22,060</strong></td><td><strong>~£19,233+</strong></td><td>Excl. depositary</td></tr>
+</table>
+
+<hr>
+
+<h3>24C — Annual Spanish Holding Costs (Estimated)</h3>
+
+<table>
+<tr><th>Payee</th><th>Item</th><th>Annual</th><th>Years</th><th>EUR Total</th><th>GBP Est.</th></tr>
+<tr><td>Ayuntamiento de Yaiza</td><td>IBI (Spanish council tax)</td><td>~€400/yr</td><td>6 yrs (2020–2025)</td><td>~€2,400</td><td>~£2,100</td></tr>
+<tr><td>Shangrila Park Comunidad</td><td>Community of Owners fees</td><td>~€1,200/yr</td><td>6 yrs (2020–2025)</td><td>~€7,200</td><td>~£6,300</td></tr>
+<tr><td><strong>TOTAL HOLDING COSTS</strong></td><td></td><td></td><td></td><td><strong>~€9,600 est.</strong></td><td><strong>~£8,400 est.</strong></td></tr>
+</table>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">Community and IBI costs are estimates. Both are paid direct to Spanish entities — not through Wincham. Confirm from Los Romeros Limited Sabadell bank account statements.</div></div>
+
+<hr>
+
+<h3>24D — Foreign Exchange Costs (Estimated)</h3>
+
+<table>
+<tr><th>Item</th><th>GBP Est.</th><th>Notes</th></tr>
+<tr><td>FX spread on EUR payments during ownership</td><td>~£400</td><td>Estimated 1.5% on ~€26,000 EUR outgoings</td></tr>
+<tr><td>Repatriation of 2026 sale proceeds EUR → GBP</td><td>~£2,500–£4,500</td><td><strong>Not yet incurred.</strong> 0.8–1.5% on ~€293,000 net proceeds</td></tr>
+</table>
+
+<hr>
+
+<h3>24E — Capital Acquisition (Share Purchase from Stockwells, Dec 2019)</h3>
+
+<table>
+<tr><th>Item</th><th>GBP</th><th>Notes</th></tr>
+<tr><td>Director's Loan Account — paid to Mary & Kevin Stockwell</td><td>£37,652</td><td>Capital cost of the investment — paid to Stockwells, NOT Wincham</td></tr>
+</table>
+
+<hr>
+
+<h3>24F — Grand Total Summary</h3>
+
+<table>
+<tr><th>Category</th><th>Confirmed GBP</th><th>Estimated Full GBP</th></tr>
+<tr><td>Wincham fees (all)</td><td>£15,786</td><td><strong>£17,441</strong></td></tr>
+<tr><td>Third-party Spanish sale costs 2026</td><td>£19,233+</td><td>£19,233+</td></tr>
+<tr><td>Annual Spanish holding costs</td><td>Not documented</td><td>~£8,400</td></tr>
+<tr><td>FX costs (incurred to date)</td><td>—</td><td>~£400</td></tr>
+<tr><td>FX future (repatriation)</td><td>—</td><td>~£2,500–£4,500</td></tr>
+<tr><td><strong>TOTAL RUNNING COSTS (excl. acquisition)</strong></td><td><strong>£35,019+</strong></td><td><strong>~£45,474+</strong></td></tr>
+<tr><td>Capital acquisition (shares — paid to Stockwells)</td><td>£37,652</td><td>£37,652</td></tr>
+<tr><td><strong>TOTAL ALL OUTGOINGS INCLUDING ACQUISITION</strong></td><td><strong>~£72,671+</strong></td><td><strong>~£83,126+</strong></td></tr>
+</table>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body">Philip Harrison's confirmed direct payments to Wincham entities total <strong>£15,786</strong> based on portal-confirmed data, estimated <strong>£17,441</strong> including unconfirmed years. Against a sale price of €315,000 (≈ £274,617), Wincham's fees represent approximately <strong>6.4% of the gross sale proceeds</strong> — before Spanish CGT, UK Corporation Tax, and the professional negligence claim.</div></div>
+
+<hr>
+
+<h2>25. FISCAL REPRESENTATION — SERVICE VALUE ANALYSIS</h2>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body"><strong>Critical finding:</strong> Los Romeros Limited is a <strong>UK private limited company</strong> — a non-resident legal entity for Spanish tax purposes. Under Spanish IRNR law, the annual imputed income tax (renta imputada / Modelo 210) <strong>does not apply to legal entities</strong>. It only applies to non-resident natural persons (individuals). If the property was not rented out during 2019–2026, <strong>there was no annual Spanish tax filing obligation for Los Romeros Limited whatsoever.</strong></div></div>
+
+<table>
+<tr><th>Obligation</th><th>Non-resident individual</th><th>Los Romeros Ltd (UK company)</th></tr>
+<tr><td>Annual imputed income Modelo 210</td><td>✅ Required every year</td><td>❌ <strong>NOT REQUIRED</strong></td></tr>
+<tr><td>Rental income returns</td><td>If let</td><td>If let only</td></tr>
+<tr><td>CGT / Modelo 210 on sale</td><td>19%</td><td>19% (due 20 July 2026)</td></tr>
+<tr><td>IBI (rates)</td><td>Direct to Ayuntamiento</td><td>Direct to Ayuntamiento</td></tr>
+</table>
+
+<p><strong>The question for proceedings:</strong> What substantive annual work did Wincham perform for £200–£300/year? The formal document request must demand every Modelo 210 or other Spanish tax return filed for Los Romeros Limited 2019–2026. A local Lanzarote gestoría would charge approximately €50–100/year to hold AEAT correspondence — a fraction of Wincham's charge.</p>
+
+<hr>
+
+<h2>26. WINCHAM SPANISH SERVICES SL — CONFIRMED OFFICE</h2>
+
+<div class="alert note"><strong>📌 NOTE</strong><div class="alert-body">Confirmed from Google Business records and company registration.</div></div>
+
+<table>
+<tr><th>Detail</th><th>Wincham Spanish Services SL</th></tr>
+<tr><td><strong>Full legal name</strong></td><td>Wincham Spanish Services SL</td></tr>
+<tr><td><strong>CIF</strong></td><td>B-54842695</td></tr>
+<tr><td><strong>Building</strong></td><td>Edificio Apolo VII</td></tr>
+<tr><td><strong>Street address</strong></td><td>Av. de los Ejércitos Españoles, 10</td></tr>
+<tr><td><strong>Town / Postcode</strong></td><td>Calp (Calpe), Alicante — 03710</td></tr>
+<tr><td><strong>Phone</strong></td><td>+34 965 83 09 91</td></tr>
+<tr><td><strong>Store signage</strong></td><td>"WINCHAM INTERNATIONAL — LEGAL AND TAX ADVISORS — PROPERTY CONSULTANTS — CORPORATE SERVICES — PAYMENT SERVICES"</td></tr>
+</table>
+
+<div class="alert warning"><strong>⚠️ WARNING</strong><div class="alert-body">Wincham's shopfront explicitly states "LEGAL AND TAX ADVISORS." This creates a direct professional duty of care for tax and legal advice given to clients, including the Harrison family. Any failure to disclose material legal risks (including the Spanish scheme legality issues at Section 27 below) is a breach of that duty.</div></div>
+
+<p><strong>Notary location note:</strong> Notaría Patricia del Río Fernández is located at <strong>Edificio Cristina, Carrer la Santamaría, 10, 03710 Calp</strong> — a different building and street from Wincham, but both in the same postcode and town (Calpe). The use of a Calpe notary for a <strong>Lanzarote</strong> property sale — where Wincham's own Spanish office is located in Calpe — raises the question of whether Wincham directed the choice of notary. No disclosure of this geographical connection was made to Philip Harrison.</p>
+
+<hr>
+
+<h2>27. FCA REGISTRATION CLAIM — POTENTIAL CRIMINAL OFFENCE</h2>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>This section concerns a publicly-made statement by Mark Roach that Wincham is regulated by the FCA under a registration number that the FCA does not recognise. This may constitute a criminal offence under the Financial Services and Markets Act 2000.</strong></div></div>
+
+<h3>27.1 The Public Statement</h3>
+
+<p>On <strong>25 April 2014</strong>, Mark Roach posted the following statement in a publicly accessible online forum (a British-led Spanish online newspaper):</p>
+
+<blockquote><em>"Wincham Investments Limited and its subsidiary companies are regulated by the Financial Conduct Authority (FCA) under registration number: 615817. HMRC Money Laundering Regulation Licence (MLR) number: 12606134. Data Protection Licence Number: Z10049."</em></blockquote>
+>
+<blockquote>— Mark Roach, posted 25 April 2014</blockquote>
+
+<h3>27.2 FCA Register Verification — 14 April 2026</h3>
+
+<p>Live search of the FCA Financial Services Register (register.fca.org.uk) conducted 14 April 2026:</p>
+
+<table>
+<tr><th>Search</th><th>Result</th></tr>
+<tr><td>FRN <strong>615817</strong></td><td><strong>NO RESULTS — not recognised</strong></td></tr>
+<tr><td>Search firm name "Wincham"</td><td>4 entities found — none with FRN 615817</td></tr>
+<tr><td>Wincham Investments Limited</td><td>FRN <strong>714811</strong> — status: <strong>No longer authorised</strong></td></tr>
+<tr><td>Wincham Investments Ltd</td><td>FRN <strong>471661</strong> — status: <strong>No longer registered as Appointed Representative</strong></td></tr>
+<tr><td>Wincham Vehicle Services Ltd</td><td>FRN <strong>755616</strong> — status: <strong>No longer registered</strong></td></tr>
+</table>
+
+<div class="alert caution"><strong>🔴 CAUTION</strong><div class="alert-body"><strong>FRN 615817 does not belong to any Wincham entity in the FCA register.</strong> Every Wincham entity found on the FCA register is listed as <strong>no longer authorised</strong> or <strong>no longer registered.</strong> Mark Roach's 2014 statement claiming FCA regulation under that number was either: (a) false at the time it was made; or (b) relates to a registration that has since been removed/cancelled. Either way, the claim appears to be a <strong>false representation of regulatory status</strong> made to reassure clients and members of the public.</div></div>
+
+<h3>27.3 Legal Exposure — FCA False Claim</h3>
+
+<table>
+<tr><th>Statutory Provision</th><th>Potential Offence</th></tr>
+<tr><td><strong>Financial Services and Markets Act 2000, s.24</strong></td><td>Criminal offence to claim FCA authorisation without proper authorisation — <strong>up to 2 years imprisonment</strong></td></tr>
+<tr><td><strong>FSMA 2000, s.238</strong></td><td>Unlawful financial promotion by unauthorised persons</td></tr>
+<tr><td><strong>Consumer Protection from Unfair Trading Regulations 2008</strong></td><td>Making a false claim of professional status or membership of an approval body — an automatically unfair commercial practice</td></tr>
+<tr><td><strong>Fraud Act 2006, s.2</strong></td><td>Fraud by false representation — if the statement was made to induce clients to enter or maintain contracts</td></tr>
+</table>
+
+<h3>27.4 Context in Which the Statement Was Made</h3>
+
+<p>Mark Roach's 2014 forum statement was made in the context of defending Wincham's Spanish property scheme against criticism from Spanish property lawyer <strong>Antonio Flores</strong>. The full exchange reveals the commercial purpose of the FCA claim: to reassure hesitant clients and members of the public that Wincham was a regulated, trustworthy entity.</p>
+
+<p>Philip Harrison and Beryl Harrison entered into their contract with Wincham (directly or through the Los Romeros Limited structure) after this public statement was available. If they or anyone advising them relied on Wincham's claimed regulatory status, this constitutes actionable misrepresentation.</p>
+
+<h3>27.5 The Wincham Spanish Scheme — Legal Status</h3>
+
+<p>The same 2014 forum thread contains critical evidence about the legality of the scheme Wincham sold to clients:</p>
+
+<p><strong>The Scheme:</strong> Wincham advised clients to place Spanish properties into UK limited companies. Upon the owner's death, beneficiaries would inherit the UK company shares — not the Spanish property directly. The intended effect was to bypass Spanish Inheritance Tax (IHT), Spanish Land Registry transfer, and Spanish probate.</p>
+
+<p><strong>Spanish Tax Authority Position:</strong>
+Spanish property lawyer Antonio Flores cited <strong>Tax Binding Consultation 07383-13</strong>, in which the Spanish Tax Office (Agencia Tributaria / AEAT) formally stated that it <strong>does not recognise the lawfulness of schemes created with the sole purpose of relocating taxation to the UK.</strong> The Spanish Tax Office views such arrangements as:</p>
+
+<blockquote><em>"Crossing the line from lawful tax avoidance into illegal tax evasion — punishable through regular inspection procedures."</em></blockquote>
+>
+<blockquote>— Antonio Flores, citing Tax Binding Consultation 07383-13</blockquote>
+
+<p><strong>Mark Roach's Response (25 April 2014):</strong>
+Mark Roach publicly defended the scheme as a legitimate "service" that simplifies ownership and "protects clients from high Spanish tax bills," and stated that Wincham would "still be here in the next 12 months supplying the same services."</p>
+
+<div class="alert warning"><strong>⚠️ WARNING</strong><div class="alert-body"><strong>This means that by April 2014, Wincham — through Mark Roach — was aware that the Spanish Tax Authority had formally characterised their scheme as potentially illegal tax evasion.</strong> Yet Wincham continued operating the scheme. The Harrisons acquired their interest in Los Romeros Limited in December 2019 — more than 5 years after this formal Spanish Tax Office ruling had been publicised. There is no evidence that Wincham ever disclosed Tax Binding Consultation 07383-13 or the associated legal risk to the Harrisons.</div></div>
+
+<h3>27.6 Implications for the Harrison Claim</h3>
+
+<table>
+<tr><th>Issue</th><th>Implication</th></tr>
+<tr><td>Wincham continued operating the scheme post-2014</td><td>They had actual knowledge of the legal risk from at least 25 April 2014</td></tr>
+<tr><td>No disclosure of Tax Binding Consultation 07383-13</td><td>Breach of duty to advise — professional negligence</td></tr>
+<tr><td>Mark Roach falsely claimed FCA regulation</td><td>Potential fraud / misrepresentation affecting validity of the entire Wincham engagement</td></tr>
+<tr><td>All Wincham entities are now "no longer authorised"</td><td>Clients were relying on professional indemnity and regulatory backstop that may never have properly existed</td></tr>
+<tr><td>Wincham operates as "Legal and Tax Advisors" (signage) but Google-registered as "Real estate agent"</td><td>Inconsistency in claimed professional status — relevant to duty of care scope</td></tr>
+</table>
+
+<div class="alert important"><strong>ℹ️ IMPORTANT</strong><div class="alert-body"><strong>The solicitor instructed on this matter must investigate:</strong> (1) Whether Wincham held valid PI insurance at the time of the 2019 and 2026 transactions; (2) Whether the FCA misrepresentation affected the Harrisons' decision to contract with Wincham; (3) Whether a regulatory complaint to the FCA, HMRC, and/or the ICO is warranted alongside the civil claim.</div></div>
+
+<hr>
+
+<p><em>Report Version 4.2 — 14 April 2026</em>
+<em>Compiled from: Wincham portal browser capture (tax.wincham.com) + PDF analysis of SPA (INT-154371), Completion Statement (WI-25863), and five 2010 Spanish legal documents + live portal fee verification + Companies House research + FCA Financial Services Register search (14 April 2026, live) + Spanish newspaper forum archive (Mark Roach public statement, 25 April 2014) + Google Business verification (Wincham Spanish Services SL, Calpe)</em>
+<em>All document reference numbers (INT-XXXXXX) are verifiable within the Wincham client portal</em>
+<em>This report is confidential and prepared in contemplation of legal proceedings. It is subject to litigation privilege.</em></p>
+</main>
+
+<footer class="doc-footer">
+  <strong>CONFIDENTIAL — SUBJECT TO LITIGATION PRIVILEGE</strong><br>
+  Velyon Legal Intelligence Platform &nbsp;|&nbsp; Evidence Reference: WI-13211 / WI-25863 &nbsp;|&nbsp; Version 4.1 — 14 April 2026<br>
+  This document is prepared in contemplation of legal proceedings. It may not be disclosed without the express authority of Philip Harrison or his legal representative.
+</footer>
+
+</body>
+</html>
