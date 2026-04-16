@@ -61,7 +61,7 @@
   .meta-item span { font-size: 13px; font-weight: 600; color: white; word-break: break-word; }
 
   /* ── CONTENT ── */
-  .content { max-width: 1100px; margin: 0 auto; padding: 40px 48px 16px 48px; overflow-x: hidden; }
+  .content { max-width: 1100px; margin: 0 auto; padding: 40px 48px 0 48px; overflow-x: hidden; }
 
   h1 { font-size: 22px; font-weight: 700; color: var(--primary); margin: 40px 0 16px; padding-bottom: 8px; border-bottom: 3px solid var(--primary); }
   h2 { font-size: 17px; font-weight: 600; color: var(--primary-light); margin: 28px 0 12px; }
@@ -498,6 +498,17 @@
       display: none !important;
     }
   }
+
+
+  /* ── TIGHT FOOTER SPACING — remove gap before footer ── */
+  .content > :last-child { margin-bottom: 0 !important; }
+  main.content > p:last-of-type { margin-bottom: 0 !important; }
+  main.content > hr:last-of-type { margin-bottom: 0 !important; margin-top: 16px !important; }
+  main.content hr { margin: 16px 0 !important; }
+
+
+  /* ── REDUCE ALERT BOTTOM MARGIN ── */
+  .alert { margin-bottom: 12px !important; }
 
 </style>
 </head>
