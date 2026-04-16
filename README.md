@@ -1,4 +1,4 @@
-﻿# Harrison v Wincham — Forensic Audit Report
+# Harrison v Wincham — Forensic Audit Report
 
 **Los Romeros Limited | Property Sale — Lanzarote, Spain**
 
@@ -6,7 +6,7 @@
 
 ---
 
-This repository hosts the forensic audit report prepared by the **Velyon Legal Intelligence Platform** for Philip Harrison regarding the sale of 85 Shangrila Park, Playa Blanca, Lanzarote through Los Romeros Limited (Company No. 02817568).
+This repository hosts the forensic audit report prepared by the **Velyon Legal Intelligence Platform** for Philip Harrison regarding the sale of 85 Shangrila Park, Playa Blanca, Lanzarote through Los Romeros Limited (Company No. 06993349).
 
 The report covers:
 - Sale and Purchase Agreement analysis (INT-154371)
@@ -16,8 +16,9 @@ The report covers:
 - FCA registration irregularities
 - Wincham Spanish scheme — AEAT legal position
 - Complete forensic cost schedule (£83K+ total outgoings)
+- Red Flag 15: Adrem Accounting Ltd — registered office control (confirmed April 2026)
 
-**Live report:** https://dean349.github.io/harrison-v-wincham-forensic-audit/
+**Live report:** https://dean349.github.io/harrison-v-wincham-lanzarote-property-closing-statement-forensic-audit/forensic-report.html
 
 ---
 
