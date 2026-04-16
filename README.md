@@ -2,7 +2,7 @@
 
 **Los Romeros Limited | Property Sale — Lanzarote, Spain**
 
-**Version 4.2 | 14 April 2026**
+**Version 4.2 | 16 April 2026**
 
 ---
 
@@ -16,9 +16,9 @@ The report covers:
 - FCA registration irregularities
 - Wincham Spanish scheme — AEAT legal position
 - Complete forensic cost schedule (£83K+ total outgoings)
-- Red Flag 15: Adrem Accounting Ltd — registered office control (confirmed April 2026)
+- Red Flag 15: Adrem Accounting Ltd — registered office control (confirmed 16 April 2026)
 
-**Live report:** https://dean349.github.io/harrison-v-wincham-lanzarote-property-closing-statement-forensic-audit/forensic-report.html
+**Live report:** https://dean349.github.io/harrison-v-wincham-lanzarote-property-closing-statement-forensic-audit/
 
 ---
 
