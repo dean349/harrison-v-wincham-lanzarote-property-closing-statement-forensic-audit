@@ -391,38 +391,35 @@
   /* ════════════════════════════════
      DESKTOP SIDEBAR TOC
      Hidden on mobile — only visible ≥1200px
+     Uses a wrapper div approach — does NOT touch body or any existing layout
      ════════════════════════════════ */
   #desktop-toc {
-    display: none; /* hidden by default; shown in media query below */
+    display: none;
   }
 
   @media (min-width: 1200px) {
-    /* Shift main content right to make room for sidebar */
-    body {
+    /* The wrapper div holds sidebar + main content in a side-by-side grid */
+    .desktop-layout-wrapper {
       display: grid;
       grid-template-columns: 260px 1fr;
-      grid-template-rows: auto auto 1fr auto;
-      min-height: 100vh;
+      align-items: start;
+      min-height: 60vh;
     }
-
-    /* Header spans full width */
-    .logo-banner   { grid-column: 1 / -1; }
-    header.doc-header { grid-column: 1 / -1; }
 
     /* Sidebar */
     #desktop-toc {
       display: block;
       grid-column: 1;
-      grid-row: 3;
       position: sticky;
       top: 0;
       height: 100vh;
       overflow-y: auto;
       background: #f0f4f8;
-      border-right: 2px solid var(--border);
+      border-right: 2px solid var(--border, #d0dce8);
       padding: 0 0 24px 0;
       z-index: 200;
       scrollbar-width: thin;
+      flex-shrink: 0;
     }
 
     #desktop-toc::-webkit-scrollbar { width: 4px; }
@@ -430,7 +427,7 @@
     #desktop-toc::-webkit-scrollbar-thumb { background: #9eb8d8; border-radius: 4px; }
 
     #desktop-toc .dtoc-header {
-      background: var(--primary);
+      background: var(--primary, #1e3a5f);
       color: white;
       font-size: 11px;
       font-weight: 700;
@@ -454,7 +451,7 @@
       gap: 8px;
       padding: 8px 16px;
       font-size: 12.5px;
-      color: var(--text);
+      color: var(--text, #2c3e50);
       text-decoration: none;
       line-height: 1.4;
       border-left: 3px solid transparent;
@@ -463,14 +460,14 @@
 
     #desktop-toc ul li a:hover {
       background: #dce8f5;
-      border-left-color: var(--primary-light);
-      color: var(--primary);
+      border-left-color: var(--primary-light, #4a7ab5);
+      color: var(--primary, #1e3a5f);
     }
 
     #desktop-toc ul li a.active {
       background: #c8ddf5;
-      border-left-color: var(--primary);
-      color: var(--primary);
+      border-left-color: var(--primary, #1e3a5f);
+      color: var(--primary, #1e3a5f);
       font-weight: 600;
     }
 
@@ -478,21 +475,17 @@
       flex-shrink: 0;
       font-size: 11px;
       font-weight: 700;
-      color: var(--primary-light);
+      color: var(--primary-light, #4a7ab5);
       min-width: 22px;
       padding-top: 1px;
     }
 
-    /* Main content area occupies column 2 */
-    .content {
+    /* Main content takes remaining space */
+    .desktop-layout-wrapper > main,
+    .desktop-layout-wrapper > div.content,
+    .desktop-layout-wrapper > .content {
       grid-column: 2;
-      grid-row: 3;
-      max-width: 100%;
-    }
-
-    /* Footer spans full width */
-    .doc-footer {
-      grid-column: 1 / -1;
+      min-width: 0; /* prevent overflow */
     }
 
     /* Hide mobile TOC toggle button on desktop */
@@ -531,6 +524,7 @@
 </header>
 
 
+<div class="desktop-layout-wrapper">
 <!-- ══ DESKTOP SIDEBAR TABLE OF CONTENTS (desktop only ≥1200px) ══ -->
 <aside id="desktop-toc" aria-label="Desktop Table of Contents">
   <div class="dtoc-header">&#128196; Contents</div>
@@ -2386,6 +2380,7 @@ Mark Roach publicly defended the scheme as a legitimate "service" that simplifie
 <em>All document reference numbers (INT-XXXXXX) are verifiable within the Wincham client portal</em>
 <em>This report is confidential and prepared in contemplation of legal proceedings. It is subject to litigation privilege.</em></p>
 </main>
+</div><!-- /.desktop-layout-wrapper -->
 
 <footer class="doc-footer">
   <strong>CONFIDENTIAL — SUBJECT TO LITIGATION PRIVILEGE</strong><br>
