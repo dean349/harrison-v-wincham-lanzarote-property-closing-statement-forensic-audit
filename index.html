@@ -387,6 +387,125 @@
     margin: 48px 0 0;
   }
 
+
+  /* ════════════════════════════════
+     DESKTOP SIDEBAR TOC
+     Hidden on mobile — only visible ≥1200px
+     ════════════════════════════════ */
+  #desktop-toc {
+    display: none; /* hidden by default; shown in media query below */
+  }
+
+  @media (min-width: 1200px) {
+    /* Shift main content right to make room for sidebar */
+    body {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: auto auto 1fr auto;
+      min-height: 100vh;
+    }
+
+    /* Header spans full width */
+    .logo-banner   { grid-column: 1 / -1; }
+    header.doc-header { grid-column: 1 / -1; }
+
+    /* Sidebar */
+    #desktop-toc {
+      display: block;
+      grid-column: 1;
+      grid-row: 3;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: #f0f4f8;
+      border-right: 2px solid var(--border);
+      padding: 0 0 24px 0;
+      z-index: 200;
+      scrollbar-width: thin;
+    }
+
+    #desktop-toc::-webkit-scrollbar { width: 4px; }
+    #desktop-toc::-webkit-scrollbar-track { background: #e8edf5; }
+    #desktop-toc::-webkit-scrollbar-thumb { background: #9eb8d8; border-radius: 4px; }
+
+    #desktop-toc .dtoc-header {
+      background: var(--primary);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    #desktop-toc ul {
+      list-style: none;
+      padding: 8px 0;
+      margin: 0;
+    }
+
+    #desktop-toc ul li a {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 16px;
+      font-size: 12.5px;
+      color: var(--text);
+      text-decoration: none;
+      line-height: 1.4;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+
+    #desktop-toc ul li a:hover {
+      background: #dce8f5;
+      border-left-color: var(--primary-light);
+      color: var(--primary);
+    }
+
+    #desktop-toc ul li a.active {
+      background: #c8ddf5;
+      border-left-color: var(--primary);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    #desktop-toc ul li a .dtoc-num {
+      flex-shrink: 0;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-light);
+      min-width: 22px;
+      padding-top: 1px;
+    }
+
+    /* Main content area occupies column 2 */
+    .content {
+      grid-column: 2;
+      grid-row: 3;
+      max-width: 100%;
+    }
+
+    /* Footer spans full width */
+    .doc-footer {
+      grid-column: 1 / -1;
+    }
+
+    /* Hide mobile TOC toggle button on desktop */
+    #toc-toggle {
+      display: none !important;
+    }
+
+    /* Hide mobile TOC drawer on desktop */
+    #toc-drawer {
+      display: none !important;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -410,6 +529,46 @@
     <div class="meta-item"><label>Reference</label><span>WI-13211 / WI-25863</span></div>
   </div>
 </header>
+
+
+<!-- ══ DESKTOP SIDEBAR TABLE OF CONTENTS (desktop only ≥1200px) ══ -->
+<aside id="desktop-toc" aria-label="Desktop Table of Contents">
+  <div class="dtoc-header">&#128196; Contents</div>
+  <ul>
+    <li><a href="#1-portal-dashboard-cases-found"><span class="dtoc-num">1.</span> Portal Dashboard — Cases Found</a></li>
+    <li><a href="#sec-phil"><span class="dtoc-num">2.</span> Phil Harrison — His Account</a></li>
+    <li><a href="#18-property-ownership-history"><span class="dtoc-num">3.</span> Property Ownership History</a></li>
+    <li><a href="#sec-sellers"><span class="dtoc-num">4.</span> The Sellers — Stockwell</a></li>
+    <li><a href="#11-named-parties-and-third-parties"><span class="dtoc-num">5.</span> Named Parties &amp; Third Parties</a></li>
+    <li><a href="#14-wincham-contact-details-from-portal-footer"><span class="dtoc-num">6.</span> Wincham Contact Details</a></li>
+    <li><a href="#2-the-property-and-company"><span class="dtoc-num">7.</span> The Property &amp; Company</a></li>
+    <li><a href="#3-the-share-purchase-how-it-worked"><span class="dtoc-num">8.</span> The Share Purchase</a></li>
+    <li><a href="#15-sale-purchase-agreement-full-analysis-int-154371"><span class="dtoc-num">9.</span> Sale &amp; Purchase Agreement</a></li>
+    <li><a href="#4-purchase-price-and-payment-structure"><span class="dtoc-num">10.</span> Purchase Price &amp; Payment</a></li>
+    <li><a href="#5-key-dates-timeline"><span class="dtoc-num">11.</span> Key Dates Timeline</a></li>
+    <li><a href="#16-completion-statement-full-analysis"><span class="dtoc-num">12.</span> Completion Statement Analysis</a></li>
+    <li><a href="#6-all-wincham-fees-complete-itemised-list"><span class="dtoc-num">13.</span> All Wincham Fees</a></li>
+    <li><a href="#7-third-party-costs"><span class="dtoc-num">14.</span> Third-Party Costs</a></li>
+    <li><a href="#10-complete-financial-summary"><span class="dtoc-num">15.</span> Complete Financial Summary</a></li>
+    <li><a href="#sec-payment-history"><span class="dtoc-num">16.</span> Payment History</a></li>
+    <li><a href="#24-complete-forensic-cost-schedule-total-outgoings"><span class="dtoc-num">17.</span> Forensic Cost Schedule</a></li>
+    <li><a href="#25-fiscal-representation-service-value-analysis"><span class="dtoc-num">18.</span> Fiscal Rep Value Analysis</a></li>
+    <li><a href="#19-itp-tax-analysis"><span class="dtoc-num">19.</span> ITP Tax Analysis</a></li>
+    <li><a href="#22-lanzarote-property-market-price-appreciation-analysis-201"><span class="dtoc-num">20.</span> Property Market Analysis</a></li>
+    <li><a href="#9-full-document-inventory-case-wi-13211"><span class="dtoc-num">21.</span> Document Inventory (WI-13211)</a></li>
+    <li><a href="#8-key-confirmed-messages-and-correspondence"><span class="dtoc-num">22.</span> Key Messages &amp; Correspondence</a></li>
+    <li><a href="#17-evidence-secured-13-april-2026"><span class="dtoc-num">23.</span> Evidence Secured</a></li>
+    <li><a href="#20-formal-evidence-gathering-actions-13-april-2026"><span class="dtoc-num">24.</span> Evidence Gathering Actions</a></li>
+    <li><a href="#23-cif-certificate-explanation-and-how-to-obtain"><span class="dtoc-num">25.</span> CIF Certificate</a></li>
+    <li><a href="#12-key-documents-to-obtain-for-legal-action"><span class="dtoc-num">26.</span> Key Documents to Obtain</a></li>
+    <li><a href="#sec-laws-broken"><span class="dtoc-num">27.</span> Laws Broken</a></li>
+    <li><a href="#13-legal-observations-and-red-flags"><span class="dtoc-num">28.</span> Legal Observations &amp; Red Flags</a></li>
+    <li><a href="#26-wincham-spanish-services-sl-confirmed-office"><span class="dtoc-num">29.</span> Wincham Spanish Services</a></li>
+    <li><a href="#27-fca-registration-claim-potential-criminal-offence"><span class="dtoc-num">30.</span> FCA Registration Claim</a></li>
+    <li><a href="#sec-claims"><span class="dtoc-num">31.</span> Claims Summary</a></li>
+    <li><a href="#21-professional-recommendations"><span class="dtoc-num">32.</span> Professional Recommendations</a></li>
+  </ul>
+</aside>
 
 <main class="content">
 <p># Wincham Client Portal — Forensic Investigation Report
@@ -2311,6 +2470,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+</script>
+
+
+<script>
+  /* Desktop TOC — highlight active section on scroll */
+  (function() {
+    if (window.innerWidth < 1200) return;
+    var links = document.querySelectorAll('#desktop-toc a');
+    var sections = [];
+    links.forEach(function(a) {
+      var id = a.getAttribute('href').replace('#','');
+      var el = document.getElementById(id);
+      if (el) sections.push({el: el, a: a});
+    });
+
+    function onScroll() {
+      var scrollY = window.scrollY + 120;
+      var active = null;
+      sections.forEach(function(s) {
+        if (s.el.offsetTop <= scrollY) active = s;
+      });
+      links.forEach(function(a) { a.classList.remove('active'); });
+      if (active) active.a.classList.add('active');
+    }
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    onScroll();
+  })();
 </script>
 
 </body>
